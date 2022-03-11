@@ -1,14 +1,14 @@
 function applyExtraSetup(sequelize) {
-  const { User, Order, Product, ProductInCart, OrderedProducts } = sequelize.models;
+  const { User, Order, Product } = sequelize.models;
 
-  User.hasMany(Order);
-  Order.belongsTo(User);
+  User.hasMany(Order, { foreignKey: 'userId' });
+  Order.belongsTo(User, { foreignKey: 'userId' });
 
-  Order.belongsToMany(Product, { through: 'OrderedProduct', foreignKey: 'OrderId' });
-  Product.belongsToMany(Order, { through: 'OrderedProduct', foreignKey: 'ProductId' });
+  Order.belongsToMany(Product, { through: 'OrderedProduct', foreignKey: 'orderId' });
+  Product.belongsToMany(Order, { through: 'OrderedProduct', foreignKey: 'productId' });
 
-  User.belongsToMany(Product, { through: 'ProductInCart', foreignKey: 'UserId' });
-  Product.belongsToMany(User, { through: 'ProductInCart', foreignKey: 'ProductId' });
+  User.belongsToMany(Product, { through: 'ProductInCart', foreignKey: 'userId' });
+  Product.belongsToMany(User, { through: 'ProductInCart', foreignKey: 'productId' });
 }
 
 module.exports = { applyExtraSetup };

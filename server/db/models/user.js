@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {}
   User.init(
     {
-      UserId: {
+      userId: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         alloWNull: false,

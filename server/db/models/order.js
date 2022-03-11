@@ -9,7 +9,13 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {}
   Order.init(
-    {},
+    {
+      orderId: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+    },
     {
       sequelize, //connection instance
       modelName: 'Order',

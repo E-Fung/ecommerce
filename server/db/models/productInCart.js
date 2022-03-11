@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
   class ProductInCart extends Model {}
   ProductInCart.init(
     {
+      productInCartId: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
       quantity: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -20,7 +25,8 @@ module.exports = (sequelize, DataTypes) => {
       sequelize, //connection instance
       modelName: 'ProductInCart',
       freezeTableName: true,
-      timestamps: false,
+      timestamps: true,
+      createdAt: false,
     }
   );
   return ProductInCart;
