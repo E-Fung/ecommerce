@@ -6,8 +6,15 @@ const populateProducts = async () => {
   let tempProductList = await axios.get(productURL);
 
   tempProductList.data.forEach(async (product) => {
+    const productParams = {
+      name: product.title,
+      price: product.price,
+      photoUrl: product.image,
+      category: product.category,
+      description: product.description,
+    };
     try {
-      await addProduct(product);
+      await addProduct(productParams);
     } catch {
       (err) => console.log(err);
     }

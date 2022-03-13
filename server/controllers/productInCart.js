@@ -5,17 +5,18 @@ module.exports = {
   add(req, res) {
     return updateOrCreate(
       ProductInCart,
-      { UserId: req.body.UserId, ProductId: req.body.ProductId },
-      { quantity: req.body.quantity, UserId: req.body.UserId, ProductId: req.body.ProductId }
+      { userId: req.body.userId, ProductId: req.body.ProductId },
+      { quantity: req.body.quantity, userId: req.body.userId, ProductId: req.body.ProductId }
     )
       .then((product) => console.log(product))
       .catch((error) => console.log(error));
   },
-  getAllById(req, res) {
+  getById(req, res) {
     return ProductInCart.findAll({
       where: {
-        UserId: req.body.user,
+        userId: req.body.user,
       },
+      order: [['updatedAt', 'DESC']],
     })
       .then((ProductInCart) => {
         if (!ProductInCart) {

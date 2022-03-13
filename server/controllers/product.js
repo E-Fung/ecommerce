@@ -1,14 +1,10 @@
 const Product = require('../db').Product;
 
+//see if you can combine getAll with a whereParams={} object
+
 module.exports = {
   add(req, res) {
-    return Product.create({
-      name: req.body.title,
-      price: req.body.price,
-      photoUrl: req.body.image,
-      category: req.body.category,
-      description: req.body.description,
-    })
+    return Product.create(req.body)
       .then((product) => res.status(201).send(product))
       .catch((error) => res.status(400).send(error));
   },

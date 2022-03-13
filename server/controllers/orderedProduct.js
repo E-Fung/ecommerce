@@ -1,19 +1,18 @@
-const Order = require('../db').Order;
+const OrderedProduct = require('../db').OrderedProduct;
 
 //get all by id, should i do some pagination function?
 
 module.exports = {
   add(req, res) {
-    return Product.create(req.body)
+    return OrderedProduct.bulkCreate(req.body)
       .then((product) => res.status(201).send(product))
       .catch((error) => res.status(400).send(error));
   },
-  getByUser(req, res) {
+  getByOrder(req, res) {
     return Order.findAll({
       where: {
-        userId: req.body.userId,
+        orderId: req.body.orderId,
       },
-      order: [['createdAt', 'DESC']],
     })
       .then((orders) => {
         if (!orders) {

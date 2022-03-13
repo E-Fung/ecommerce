@@ -1,7 +1,7 @@
 export interface CartItem {
   quantity: number;
   ProductId: number;
-  UserId?: number;
+  userId?: number;
 }
 
 export interface CartPayload {
