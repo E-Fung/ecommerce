@@ -5,11 +5,14 @@ export const addItemToCart = (state: CartItem[], payload: null | CartItem) => {
   const cartCopy: CartItem[] = [...state];
   let itemExist: boolean = false;
 
-  cartCopy.map((cartItem) => {
-    if (cartItem.ProductId === payload!.ProductId) {
-      cartItem.quantity = cartItem.quantity + payload!.quantity;
+  cartCopy.map((item) => {
+    if (item.ProductId === payload!.ProductId) {
+      const itemCopy = { ...item };
+      itemCopy.quantity = itemCopy.quantity + payload!.quantity;
       itemExist = true;
+      return itemCopy;
     }
+    return item;
   });
 
   if (!itemExist) cartCopy.push(payload!);
@@ -19,7 +22,11 @@ export const addItemToCart = (state: CartItem[], payload: null | CartItem) => {
 export const adjustCart = (state: CartItem[], payload: null | CartItem) => {
   return state.map((item) => {
     if (item.ProductId === payload!.ProductId) {
-      item.quantity += payload!.quantity;
+      const itemCopy = { ...item };
+      itemCopy.quantity += payload!.quantity;
+      return itemCopy;
+    } else {
+      return item;
     }
   });
 };

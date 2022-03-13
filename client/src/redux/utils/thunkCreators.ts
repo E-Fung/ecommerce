@@ -8,7 +8,7 @@ import { Dispatch } from 'redux';
 //if user is logged in, add to database, else just add to store
 export const addCart = (params: CartItem) => async (dispatch: Dispatch) => {
   try {
-    if (params.UserId) {
+    if (params.userId) {
       await axios.post('http://localhost:5000/cart', params);
     }
     dispatch(add_Cart(params));
