@@ -1,17 +1,17 @@
 import { ActionTypes } from '../constants/action-types';
 import { CartItem } from '../../models/redux';
 
-export const add_Cart = (payload: CartItem) => {
+export const add_Cart = (cartItem: CartItem) => {
   return {
     type: ActionTypes.ADD_TO_CART,
-    payload,
+    cartItem,
   };
 };
 
-export const got_Cart = (payload: CartItem[]) => {
+export const got_Cart = (cart: CartItem[]) => {
   return {
     type: ActionTypes.GET_CART,
-    payload,
+    cart,
   };
 };
 export const drop_Cart = () => {
@@ -20,9 +20,9 @@ export const drop_Cart = () => {
   };
 };
 
-export const adjust_Cart = (payload: CartItem) => {
+export const adjust_Cart = (cartItem: CartItem) => {
   return {
     type: ActionTypes.GET_CART,
-    payload,
+    cartItem,
   };
 };

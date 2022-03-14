@@ -3,11 +3,29 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 module.exports = {
+  getUser(req, res) {
+    if (req.user) {
+      return res.json(req.user);
+    } else {
+      return res.json({});
+    }
+  },
+
   register(req, res, next) {
+    const { username, password, email } = req.body;
+
+    if (!username || !password || !email) {
+      return res.status(400).json({ error: 'Username, password, and email required' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+
     return User.create(req.body)
       .then((user) => {
         const token = jwt.sign({ id: user.dataValues.email }, process.env.ACCESS_TOKEN_SECRET);
-        return res.status(200).json({ user, token });
+        return res.status(200).json({ ...user.dataValues, token });
       })
       .catch((error) => {
         if (error.name === 'SequelizeUniqueConstraintError') {
@@ -17,6 +35,7 @@ module.exports = {
         } else next(error);
       });
   },
+
   login(req, res, next) {
     return User.findOne({
       where: {

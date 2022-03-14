@@ -7,4 +7,8 @@ export const ActionTypes = {
 
   //State, no payload
   //State payload
+
+  //User
+  SET_FETCHING_STATUS: 'SET_FETCHING_STATUS',
+  GET_USER: 'GET_USER',
 };

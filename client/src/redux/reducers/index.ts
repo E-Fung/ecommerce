@@ -2,8 +2,9 @@ import { combineReducers } from 'redux';
 // import { productReducer } from './productReducer';
 // import { userReducer } from './userReducer';
 import { cartReducer } from './cartReducer';
+import { userReducer } from './userReducer';
 
-const appReducer = combineReducers({ cart: cartReducer });
+const appReducer = combineReducers({ cart: cartReducer, user: userReducer });
 
 const CLEAR_ON_LOGOUT = 'CLEAR_ON_LOGOUT';
 export const clearOnLogout = () => {
