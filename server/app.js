@@ -23,7 +23,6 @@ app.use('/', indexRouter);
 //buffers API request, makes sure user is correct via jwt token, appends User for API queries
 app.use(function (req, res, next) {
   const token = req.headers['x-access-tokens'];
-  console.log('validating');
   if (token) {
     jwt.verify(token, process.env.SESSION_SECRET, (err, decoded) => {
       if (err) {

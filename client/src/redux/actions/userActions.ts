@@ -1,10 +1,12 @@
 import { ActionTypes } from '../constants/action-types';
 import { User } from '../../models/db';
 
-export const set_Fetching_Status = (isFetching: boolean) => ({
-  type: ActionTypes.SET_FETCHING_STATUS,
-  isFetching,
-});
+export const set_Fetching_Status = (isFetching: boolean) => {
+  return {
+    type: ActionTypes.SET_FETCHING_STATUS,
+    isFetching,
+  };
+};
 
 //sets the user state after grabbing from db
 export const got_User = (user: User) => {

@@ -1,7 +1,7 @@
 import { ActionTypes } from '../constants/action-types';
-import { UserAction, UserState } from '../../models/redux';
+import { UserAction, User } from '../../models/redux';
 
-const initialState: UserState = { isFetching: true };
+const initialState: Partial<User> = { isFetching: true };
 
 export const userReducer = (state = initialState, action: UserAction) => {
   switch (action.type) {

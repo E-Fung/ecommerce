@@ -39,7 +39,7 @@ export const fetchUser = () => async (dispatch: Dispatch) => {
   }
 };
 
-export const register = (credentials: { email: string; password: string }) => async (dispatch: Dispatch) => {
+export const register = (credentials: { name: string; email: string; password: string }) => async (dispatch: any) => {
   try {
     const { data } = await axios.post('http://localhost:5000/auth/register', credentials);
     await localStorage.setItem('messenger-token', data.token);
@@ -49,7 +49,7 @@ export const register = (credentials: { email: string; password: string }) => as
   }
 };
 
-export const login = (credentials: { email: string; password: string }) => async (dispatch: Dispatch) => {
+export const login = (credentials: { email: string; password: string }) => async (dispatch: any) => {
   try {
     const { data } = await axios.post('http://localhost:5000/auth/login', credentials);
     await localStorage.setItem('messenger-token', data.token);

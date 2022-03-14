@@ -1,3 +1,8 @@
+export interface State {
+  user: User;
+  // cart: CartItem[];
+}
+
 export interface CartItem {
   quantity: number;
   ProductId: number;
@@ -17,6 +22,7 @@ export interface User {
   password: string;
   email: string;
   photoUrl?: string;
+  isFetching?: boolean;
 }
 export interface UserAction {
   type: string;
@@ -24,7 +30,4 @@ export interface UserAction {
   isFetching?: boolean;
 }
 
-export interface UserState {
-  user?: User;
-  isFetching?: boolean;
-}
+//

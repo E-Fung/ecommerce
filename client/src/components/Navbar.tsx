@@ -1,16 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { User } from '../models/redux';
+import { User, State } from '../models/redux';
 //mx-auto - centers container
 //max-w-7xl - constrains the container
 
 //relative makes it so that the sub component's css is relative to this container
 type Props = { user: User };
 
-const Navbar: React.FC<Props> = (props) => {
-  const { user } = props;
-
+const Navbar: React.FC<Props> = ({ user }) => {
   const [userMenu, setUserMenu] = useState<boolean>(false);
   const [shopMenu, setShopMenu] = useState<boolean>(false);
 
@@ -116,10 +114,10 @@ const Navbar: React.FC<Props> = (props) => {
 
                 {!user.email && (
                   <Link
-                    to='/login'
+                    to='/register'
                     className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
                   >
-                    Login
+                    Register
                   </Link>
                 )}
               </div>
@@ -171,7 +169,7 @@ const Navbar: React.FC<Props> = (props) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: State) => {
   return {
     user: state.user,
   };
