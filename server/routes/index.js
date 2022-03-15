@@ -24,12 +24,12 @@ router.post('/productById', productController.getById);
 router.post('/cart', productInCartController.add);
 
 //User
-router.post('user', userController.alterPhoto);
+router.post('/user', userController.alterPhoto);
 
 //User Auth
-router.get('auth/user', userController.getUser);
-router.post('auth/register', userController.register);
-router.post('auth/login', userController.login);
+router.get('/auth/user', userController.getUser);
+router.post('/auth/register', userController.register);
+router.post('/auth/login', userController.login);
 
 module.exports = router;
 

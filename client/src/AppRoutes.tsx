@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchUser } from './redux/utils/thunkCreators';
 import { Routes, Route, Outlet } from 'react-router-dom';
@@ -22,19 +22,19 @@ const WithoutNav = () => {
 };
 
 const AppRoutes: React.FC<Props> = ({ user, fetchUser }) => {
-  // useEffect(() => {
-  //   fetchUser();
-  // }, [fetchUser]);
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
 
-  // if (user.isFetching) {
-  //   return <div>Loading...</div>;
-  // }
+  if (user.isFetching) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
       <Routes>
         <Route element={<WithNav />}>
-          <Route path='/'></Route>
+          <Route path='/' element={<>asd</>} />
         </Route>
         <Route element={<WithoutNav />}>
           <Route path='/register' element={<Register />} />

@@ -4,6 +4,8 @@ require('dotenv').config();
 
 module.exports = {
   getUser(req, res) {
+    console.log(User);
+    console.log('getting user');
     if (req.user) {
       return res.json(req.user);
     } else {
@@ -12,19 +14,16 @@ module.exports = {
   },
 
   register(req, res, next) {
-    const { username, password, email } = req.body;
-
-    if (!username || !password || !email) {
-      return res.status(400).json({ error: 'Username, password, and email required' });
+    const { name, password, email } = req.body;
+    if (!name || !password || !email) {
+      return res.status(400).json({ error: 'Name, password, and email required' });
     }
-
     if (password.length < 6) {
       return res.status(400).json({ error: 'Password must be at least 6 characters' });
     }
-
     return User.create(req.body)
       .then((user) => {
-        const token = jwt.sign({ id: user.dataValues.email }, process.env.ACCESS_TOKEN_SECRET);
+        const token = jwt.sign({ userId: user.dataValues.userId }, process.env.ACCESS_TOKEN_SECRET);
         return res.status(200).json({ ...user.dataValues, token });
       })
       .catch((error) => {
@@ -43,7 +42,7 @@ module.exports = {
       },
     })
       .then((user) => {
-        const token = jwt.sign({ id: user.dataValues.email }, process.env.ACCESS_TOKEN_SECRET);
+        const token = jwt.sign({ userId: user.dataValues.userId }, process.env.ACCESS_TOKEN_SECRET);
         return res.status(200).json({ user, token });
       })
       .catch((error) => {
