@@ -23,10 +23,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 //buffers API request, makes sure user is correct via jwt token, appends User for API queries
 app.use(function (req, res, next) {
   const token = req.headers['x-access-token'];
-  console.log(token, 'Token');
   if (token) {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-      console.log(decoded);
       if (err) {
         return next();
       }

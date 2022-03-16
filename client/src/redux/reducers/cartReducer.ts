@@ -12,7 +12,7 @@ export const cartReducer = (state = initialState, action: CartAction) => {
     case ActionTypes.ADJUST_CART:
       return adjustCart(state, action.cartItem!);
     case ActionTypes.DROP_CART:
-      return undefined;
+      return {};
     case ActionTypes.GET_CART:
       return action.cart;
     default:

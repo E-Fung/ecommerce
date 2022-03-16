@@ -4,8 +4,7 @@ require('dotenv').config();
 
 module.exports = {
   getUser(req, res) {
-    console.log(User);
-    console.log('getting user');
+    //Good
     if (req.user) {
       return res.json(req.user);
     } else {
@@ -14,6 +13,7 @@ module.exports = {
   },
 
   register(req, res, next) {
+    //Good
     const { name, password, email } = req.body;
     if (!name || !password || !email) {
       return res.status(400).json({ error: 'Name, password, and email required' });
@@ -21,6 +21,7 @@ module.exports = {
     if (password.length < 6) {
       return res.status(400).json({ error: 'Password must be at least 6 characters' });
     }
+    console.log('register');
     return User.create(req.body)
       .then((user) => {
         const token = jwt.sign({ userId: user.dataValues.userId }, process.env.ACCESS_TOKEN_SECRET);
@@ -28,8 +29,12 @@ module.exports = {
       })
       .catch((error) => {
         if (error.name === 'SequelizeUniqueConstraintError') {
+          console.log('1');
+
           return res.status(401).json({ error: 'User already exists' });
         } else if (error.name === 'SequelizeValidationError') {
+          console.log('2');
+
           return res.status(401).json({ error: 'Validation error' });
         } else next(error);
       });
@@ -49,6 +54,11 @@ module.exports = {
         next(error);
       });
   },
+
+  logout(req, res, next) {
+    res.sendStatus(204);
+  },
+
   alterPhoto(req, res) {
     return User.findOne({
       where: {

@@ -30,6 +30,7 @@ router.post('/user', userController.alterPhoto);
 router.get('/auth/user', userController.getUser);
 router.post('/auth/register', userController.register);
 router.post('/auth/login', userController.login);
+router.delete('/auth/logout', userController.logout);
 
 module.exports = router;
 

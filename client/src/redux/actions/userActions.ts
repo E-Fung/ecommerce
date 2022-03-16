@@ -15,3 +15,9 @@ export const got_User = (user: User) => {
     user,
   };
 };
+
+export const drop_User = () => {
+  return {
+    type: ActionTypes.DROP_USER,
+  };
+};

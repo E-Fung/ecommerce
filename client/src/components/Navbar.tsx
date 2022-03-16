@@ -2,13 +2,14 @@ import React, { useState, useMemo } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { User, State } from '../models/redux';
+import { logout } from '../redux/utils/thunkCreators';
 //mx-auto - centers container
 //max-w-7xl - constrains the container
 
 //relative makes it so that the sub component's css is relative to this container
-type Props = { user: User };
+type Props = { user: User; logout: any };
 
-const Navbar: React.FC<Props> = ({ user }) => {
+const Navbar: React.FC<Props> = ({ user, logout }) => {
   const [userMenu, setUserMenu] = useState<boolean>(false);
   const [shopMenu, setShopMenu] = useState<boolean>(false);
 
@@ -23,18 +24,16 @@ const Navbar: React.FC<Props> = ({ user }) => {
     ];
   }, []);
 
-  const userMenuItems = useMemo(() => {
-    return [
-      ['men', 'Your Profile'],
-      ['women', 'Sign out'],
-    ];
-  }, []);
-
   const toggleUserMenu = () => {
     setUserMenu(!userMenu);
   };
   const toggleShopMenu = () => {
     setShopMenu(!shopMenu);
+  };
+  const handleLogout = async (event: any) => {
+    toggleUserMenu();
+    event.preventDefault();
+    await logout();
   };
 
   return (
@@ -42,6 +41,7 @@ const Navbar: React.FC<Props> = ({ user }) => {
       <div className='max-w-7xl mx-auto px-2 sm:px-6 lg:px-8'>
         <div className='relative flex items-center justify-between'>
           <div className='absolute inset-y-0 left-0 flex items-center sm:hidden'>
+            {/* {hidden menu button on small screen} */}
             <button
               type='button'
               className='inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'
@@ -56,6 +56,7 @@ const Navbar: React.FC<Props> = ({ user }) => {
             </button>
           </div>
           <div className='flex-1 flex items-center justify-center sm:items-stretch sm:justify-start'>
+            {/* Logo, and menu items */}
             <Link to={'/'}>
               <div className='flex-shrink-0 flex items-center'>
                 {/* <img className='block lg:hidden h-16 w-auto' src={logo} alt='' />
@@ -80,10 +81,12 @@ const Navbar: React.FC<Props> = ({ user }) => {
             </div>
           </div>
           <div className='absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0'>
+            {/* Cart Register/Login button */}
             <button
               type='button'
               className='bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white'
             >
+              {/* Cart */}
               <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path
                   strokeLinecap='round'
@@ -93,7 +96,6 @@ const Navbar: React.FC<Props> = ({ user }) => {
                 />
               </svg>
             </button>
-
             <div className='ml-3 relative'>
               <div>
                 {user.email && (
@@ -113,12 +115,20 @@ const Navbar: React.FC<Props> = ({ user }) => {
                 )}
 
                 {!user.email && (
-                  <Link
-                    to='/register'
-                    className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-                  >
-                    Register
-                  </Link>
+                  <>
+                    <Link
+                      to='/register'
+                      className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+                    >
+                      Register
+                    </Link>
+                    <Link
+                      to='/login'
+                      className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+                    >
+                      Login
+                    </Link>
+                  </>
                 )}
               </div>
               {userMenu && (
@@ -129,18 +139,28 @@ const Navbar: React.FC<Props> = ({ user }) => {
                   aria-labelledby='user-menu-button'
                   tabIndex={-1}
                 >
-                  {userMenuItems.map(([link, title], index) => (
+                  <Link to='/profile'>
                     <div
                       onClick={toggleUserMenu}
                       className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
                       role='menuitem'
                       tabIndex={-1}
-                      id={`user-menu-item-${index}`}
-                      key={title}
+                      id={`user-menu-item-0`}
+                      key={'Your Profile'}
                     >
-                      {title}
+                      {'Your Profile'}
                     </div>
-                  ))}
+                  </Link>
+                  <div
+                    onClick={handleLogout}
+                    className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
+                    role='menuitem'
+                    tabIndex={-1}
+                    id={`user-menu-item-1`}
+                    key={'Sign out'}
+                  >
+                    {'Sign out'}
+                  </div>
                 </div>
               )}
             </div>
@@ -148,6 +168,7 @@ const Navbar: React.FC<Props> = ({ user }) => {
         </div>
       </div>
       {shopMenu && (
+        // user menu (when logged in)
         <div className='sm:hidden' id='mobile-menu'>
           <div className='px-2 pt-2 pb-3 space-y-1'>
             {menuItems.map(([link, title]) => (
@@ -175,4 +196,12 @@ const mapStateToProps = (state: State) => {
   };
 };
 
-export default connect(mapStateToProps)(Navbar);
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    logout: () => {
+      dispatch(logout());
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
