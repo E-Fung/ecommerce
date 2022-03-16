@@ -3,20 +3,43 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 module.exports = {
+  getUser(req, res) {
+    //Good
+    if (req.user) {
+      return res.json(req.user);
+    } else {
+      return res.json({});
+    }
+  },
+
   register(req, res, next) {
+    //Good
+    const { name, password, email } = req.body;
+    if (!name || !password || !email) {
+      return res.status(400).json({ error: 'Name, password, and email required' });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+    console.log('register');
     return User.create(req.body)
       .then((user) => {
-        const token = jwt.sign({ id: user.dataValues.email }, process.env.ACCESS_TOKEN_SECRET);
-        return res.status(200).json({ user, token });
+        const token = jwt.sign({ userId: user.dataValues.userId }, process.env.ACCESS_TOKEN_SECRET);
+        return res.status(200).json({ ...user.dataValues, token });
       })
       .catch((error) => {
         if (error.name === 'SequelizeUniqueConstraintError') {
+          console.log('1');
+
           return res.status(401).json({ error: 'User already exists' });
         } else if (error.name === 'SequelizeValidationError') {
+          console.log('2');
+
           return res.status(401).json({ error: 'Validation error' });
         } else next(error);
       });
   },
+
   login(req, res, next) {
     return User.findOne({
       where: {
@@ -24,13 +47,18 @@ module.exports = {
       },
     })
       .then((user) => {
-        const token = jwt.sign({ id: user.dataValues.email }, process.env.ACCESS_TOKEN_SECRET);
+        const token = jwt.sign({ userId: user.dataValues.userId }, process.env.ACCESS_TOKEN_SECRET);
         return res.status(200).json({ user, token });
       })
       .catch((error) => {
         next(error);
       });
   },
+
+  logout(req, res, next) {
+    res.sendStatus(204);
+  },
+
   alterPhoto(req, res) {
     return User.findOne({
       where: {

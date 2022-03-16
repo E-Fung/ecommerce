@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
+const User = require('./db').User;
+const jwt = require('jsonwebtoken');
 
 var indexRouter = require('./routes');
 
@@ -18,18 +20,16 @@ app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-
+//buffers API request, makes sure user is correct via jwt token, appends User for API queries
 app.use(function (req, res, next) {
-  const token = req.headers['x-access-tokens'];
-  console.log('validating');
+  const token = req.headers['x-access-token'];
   if (token) {
-    jwt.verify(token, process.env.SESSION_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
       if (err) {
         return next();
       }
       User.findOne({
-        where: { id: decoded.id },
+        where: { userId: decoded.userId },
       }).then((user) => {
         req.user = user;
         return next();
@@ -39,6 +39,8 @@ app.use(function (req, res, next) {
     return next();
   }
 });
+
+app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

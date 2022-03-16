@@ -1,17 +1,33 @@
+export interface State {
+  user: User;
+  // cart: CartItem[];
+}
+
 export interface CartItem {
   quantity: number;
   ProductId: number;
   userId?: number;
 }
 
-export interface CartPayload {
-  payload: null | CartItem;
+export interface CartAction {
   type: string;
+  cart?: CartItem[];
+  cartItem?: CartItem;
 }
 
-// export enum CartAction {
-//   GET_CART = 'GET_CART',
-//   ADD_TO_CART = 'ADD_TO_CART',
-//   ADJUST_CART = 'ADJUST_CART',
-//   DROP_CART = 'DROP_CART',
-// }
+//  User
+export interface User {
+  userId: number;
+  name: string;
+  password: string;
+  email: string;
+  photoUrl?: string;
+  isFetching?: boolean;
+}
+export interface UserAction {
+  type: string;
+  user?: User;
+  isFetching?: boolean;
+}
+
+//
