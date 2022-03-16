@@ -14,15 +14,16 @@ export const got_Cart = (cart: CartItem[]) => {
     cart,
   };
 };
+
 export const drop_Cart = () => {
   return {
-    type: ActionTypes.GET_CART,
+    type: ActionTypes.DROP_CART,
   };
 };
 
 export const adjust_Cart = (cartItem: CartItem) => {
   return {
-    type: ActionTypes.GET_CART,
+    type: ActionTypes.ADJUST_CART,
     cartItem,
   };
 };

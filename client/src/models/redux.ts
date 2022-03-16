@@ -1,8 +1,10 @@
 export interface State {
   user: User;
   // cart: CartItem[];
+  products: Product[];
 }
 
+//Cart
 export interface CartItem {
   quantity: number;
   ProductId: number;
@@ -30,4 +32,19 @@ export interface UserAction {
   isFetching?: boolean;
 }
 
-//
+// Product
+
+export interface Product {
+  productId: number;
+  name: string;
+  price: number;
+  photoUrl: string;
+  totalPurchased: number;
+  category: string;
+  description: string;
+}
+
+export interface ProductsAction {
+  type: string;
+  products: Product[];
+}

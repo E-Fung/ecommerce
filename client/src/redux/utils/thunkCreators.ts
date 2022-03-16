@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { add_Cart, got_Cart, drop_Cart, adjust_Cart } from '../actions/cartActions';
-import { CartItem } from '../../models/redux';
+import { set_Fetching_Status, got_User, drop_User } from '../actions/userActions';
+import { got_Products } from '../actions/productsActions';
+import { CartItem, Product } from '../../models/redux';
 import { Dispatch } from 'redux';
-import { set_Fetching_Status, got_User } from '../actions/userActions';
 
 // JWT
 axios.interceptors.request.use(async function (config) {
@@ -61,6 +62,17 @@ export const login = (credentials: { email: string; password: string }) => async
   }
 };
 
+export const logout = () => async (dispatch: any) => {
+  try {
+    await axios.delete('http://localhost:5000/auth/logout');
+    await localStorage.removeItem('messenger-token');
+    dispatch(drop_User());
+    dispatch(drop_Cart());
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 //CART
 //if user is logged in, add to database, else just add to store
 export const addCart = (params: CartItem) => async (dispatch: Dispatch) => {
@@ -95,6 +107,17 @@ export const dropCart = () => async (dispatch: Dispatch) => {
 export const adjustCart = (params: CartItem) => async (dispatch: Dispatch) => {
   try {
     dispatch(adjust_Cart(params));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//PRODUCT
+
+export const getProducts = (params) => async (dispatch: Dispatch) => {
+  try {
+    let { data } = params.category ? await axios.post('http://localhost:5000/product/category', params) : await axios.get('http://localhost:5000/product');
+    dispatch(got_Products(data));
   } catch (error) {
     console.log(error);
   }
