@@ -31,7 +31,6 @@ export const fetchUser = () => async (dispatch: Dispatch) => {
   dispatch(set_Fetching_Status(true));
   try {
     const { data } = await axios.get('http://localhost:5000/auth/user');
-    console.log(data);
     dispatch(got_User(data));
   } catch (error) {
     console.error(error);
@@ -42,9 +41,7 @@ export const fetchUser = () => async (dispatch: Dispatch) => {
 
 export const register = (credentials: { name: string; email: string; password: string }) => async (dispatch: any) => {
   try {
-    console.log('Registering');
     const { data } = await axios.post('http://localhost:5000/auth/register', credentials);
-    console.log(data);
     await localStorage.setItem('messenger-token', data.token);
     dispatch(got_User(data));
   } catch (error) {
@@ -114,9 +111,9 @@ export const adjustCart = (params: CartItem) => async (dispatch: Dispatch) => {
 
 //PRODUCT
 
-export const getProducts = (params) => async (dispatch: Dispatch) => {
+export const fetchProducts = (params: string) => async (dispatch: Dispatch) => {
   try {
-    let { data } = params.category ? await axios.post('http://localhost:5000/product/category', params) : await axios.get('http://localhost:5000/product');
+    let { data }: { data: Product[] } = await axios.get(`http://localhost:5000/product?category=${params}`);
     dispatch(got_Products(data));
   } catch (error) {
     console.log(error);

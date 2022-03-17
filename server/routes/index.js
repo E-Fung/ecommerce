@@ -17,9 +17,8 @@ router.post('./orderedProducts/:orderId', orderedProductController.getByOrder);
 
 //Product
 router.post('/product', productController.add);
-router.get('/product', productController.getAll);
-router.post('/product/category', productController.getAllByCategory);
-router.post('/productById', productController.getById);
+router.get('/product', productController.getProducts);
+router.get('/productByName', productController.getByName);
 
 router.post('/cart', productInCartController.add);
 

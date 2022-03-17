@@ -1,34 +1,20 @@
 import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { getProducts } from './redux/utils/thunkCreators';
+import { useSearchParams } from 'react-router-dom';
+import { fetchProducts } from './redux/utils/thunkCreators';
 import { connect } from 'react-redux';
 import { State } from './models/redux';
 import { Product } from './models/redux';
 import ProductCard from './components/ProductCard';
 
-const ProductCategory = (location: any) => {
-  switch (location) {
-    case '/men':
-      return "men's clothing";
-    case '/women':
-      return "women's clothing";
-    case '/jewelery':
-      return 'jewelery';
-    case '/electronics':
-      return 'electronics';
-    default:
-      return '';
-  }
-};
+type Props = { fetchProducts: any; products: Product[] };
 
-type Props = { getProducts: any; products: Product[] };
-
-const Home: React.FC<Props> = ({ getProducts, products }) => {
-  let location = useLocation().pathname;
+const ProductsContainer: React.FC<Props> = ({ fetchProducts, products }) => {
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    getProducts({ category: ProductCategory(location) });
-  }, [location]);
+    const category = searchParams.get('category');
+    fetchProducts(category ? category : '');
+  }, [searchParams]);
 
   return (
     <div className='justify-center flex flex-wrap max-w-7xl mx-auto px-2 sm:px-6 lg:px-8'>
@@ -47,12 +33,12 @@ const mapStateToProps = (state: State) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    getProducts: (params: Product[]) => {
-      dispatch(getProducts(params));
+    fetchProducts: (params: string) => {
+      dispatch(fetchProducts(params));
     },
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(ProductsContainer);
 
 //what should redux store? the products? We want the client to send an API request for each category.
 //If ton of products, dont want client to sort each time, else,
