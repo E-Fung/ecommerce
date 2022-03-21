@@ -3,13 +3,10 @@ const { updateOrCreate } = require('./utils');
 
 module.exports = {
   add(req, res) {
-    return updateOrCreate(
-      ProductInCart,
-      { userId: req.body.userId, ProductId: req.body.ProductId },
-      { quantity: req.body.quantity, userId: req.body.userId, ProductId: req.body.ProductId }
-    )
-      .then((product) => console.log(product))
-      .catch((error) => console.log(error));
+    const newItem = { userId: req.body.userId, productId: req.body.productId, quantity: req.body.quantity };
+    return updateOrCreate(ProductInCart, newItem)
+      .then((product) => res.status(201).send(product))
+      .catch((error) => res.status(400).send(error));
   },
   getById(req, res) {
     return ProductInCart.findAll({

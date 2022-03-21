@@ -7,7 +7,7 @@ export interface State {
 //Cart
 export interface CartItem {
   quantity: number;
-  ProductId: number;
+  productId: number;
   userId?: number;
 }
 

@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { State, User, Product } from './models/redux';
+import { State, User, Product, CartItem } from './models/redux';
 import { getProductsByName } from './services/services';
+import { addCart } from './redux/utils/thunkCreators';
 
-type Props = { user: User };
+type Props = { user: User; addCart: any };
 
-const ProductPage: React.FC<Props> = ({ user }) => {
+const ProductPage: React.FC<Props> = ({ user, addCart }) => {
   const { productName } = useParams();
   const [details, setDetails] = useState<Product>();
 
@@ -21,14 +22,14 @@ const ProductPage: React.FC<Props> = ({ user }) => {
 
   const handleAddToCart = async (event: any) => {
     event.preventDefault();
-    const quantity = event.target.quantity.value;
-    // const ProductId = productId;
-    // if (user) {
-    //   const userId = user.userId;
-    //   addToCart({ quantity, userId, ProductId });
-    // } else {
-    //   addToCart({ quantity, ProductId });
-    // }
+    const quantity: number = Number(event.target.quantity.value);
+    const productId: number = details!.productId;
+    if (user.userId) {
+      const userId = user.userId;
+      await addCart({ quantity, userId, productId });
+    } else {
+      await addCart({ quantity, productId });
+    }
   };
 
   const dropdownRange = useMemo(() => {
@@ -62,7 +63,7 @@ const ProductPage: React.FC<Props> = ({ user }) => {
           </div>
           <div>
             <button
-              // text='submit'
+              type='submit'
               className='text-black bg-highlight hover:bg-highlight focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2'
             >
               Add to Cart
@@ -81,7 +82,11 @@ const mapStateToProps = (state: State) => {
 };
 
 const mapDispatchToProps = (dispatch: any) => {
-  return {};
+  return {
+    addCart: (params: CartItem) => {
+      dispatch(addCart(params));
+    },
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductPage);

@@ -8,6 +8,7 @@ export const add_Cart = (cartItem: CartItem) => {
   };
 };
 
+//add cart from db to state
 export const got_Cart = (cart: CartItem[]) => {
   return {
     type: ActionTypes.GET_CART,

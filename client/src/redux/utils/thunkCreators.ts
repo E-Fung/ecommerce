@@ -74,10 +74,10 @@ export const logout = () => async (dispatch: any) => {
 //if user is logged in, add to database, else just add to store
 export const addCart = (params: CartItem) => async (dispatch: Dispatch) => {
   try {
+    dispatch(add_Cart(params));
     if (params.userId) {
       await axios.post('http://localhost:5000/cart', params);
     }
-    dispatch(add_Cart(params));
   } catch (error) {
     console.log(error);
   }
