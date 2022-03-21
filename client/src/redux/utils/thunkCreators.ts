@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { add_Cart, got_Cart, drop_Cart, adjust_Cart } from '../actions/cartActions';
-import { CartItem } from '../../models/redux';
+import { set_Fetching_Status, got_User, drop_User } from '../actions/userActions';
+import { got_Products } from '../actions/productsActions';
+import { CartItem, Product } from '../../models/redux';
 import { Dispatch } from 'redux';
-import { set_Fetching_Status, got_User } from '../actions/userActions';
 
 // JWT
 axios.interceptors.request.use(async function (config) {
@@ -30,7 +31,6 @@ export const fetchUser = () => async (dispatch: Dispatch) => {
   dispatch(set_Fetching_Status(true));
   try {
     const { data } = await axios.get('http://localhost:5000/auth/user');
-    console.log(data);
     dispatch(got_User(data));
   } catch (error) {
     console.error(error);
@@ -41,9 +41,7 @@ export const fetchUser = () => async (dispatch: Dispatch) => {
 
 export const register = (credentials: { name: string; email: string; password: string }) => async (dispatch: any) => {
   try {
-    console.log('Registering');
     const { data } = await axios.post('http://localhost:5000/auth/register', credentials);
-    console.log(data);
     await localStorage.setItem('messenger-token', data.token);
     dispatch(got_User(data));
   } catch (error) {
@@ -61,14 +59,25 @@ export const login = (credentials: { email: string; password: string }) => async
   }
 };
 
+export const logout = () => async (dispatch: any) => {
+  try {
+    await axios.delete('http://localhost:5000/auth/logout');
+    await localStorage.removeItem('messenger-token');
+    dispatch(drop_User());
+    dispatch(drop_Cart());
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 //CART
 //if user is logged in, add to database, else just add to store
 export const addCart = (params: CartItem) => async (dispatch: Dispatch) => {
   try {
+    dispatch(add_Cart(params));
     if (params.userId) {
       await axios.post('http://localhost:5000/cart', params);
     }
-    dispatch(add_Cart(params));
   } catch (error) {
     console.log(error);
   }
@@ -95,6 +104,17 @@ export const dropCart = () => async (dispatch: Dispatch) => {
 export const adjustCart = (params: CartItem) => async (dispatch: Dispatch) => {
   try {
     dispatch(adjust_Cart(params));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//PRODUCT
+
+export const fetchProducts = (params: string) => async (dispatch: Dispatch) => {
+  try {
+    let { data }: { data: Product[] } = await axios.get(`http://localhost:5000/product?category=${params}`);
+    dispatch(got_Products(data));
   } catch (error) {
     console.log(error);
   }

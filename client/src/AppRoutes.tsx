@@ -2,9 +2,12 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchUser } from './redux/utils/thunkCreators';
 import { Routes, Route, Outlet } from 'react-router-dom';
-import Register from './Register';
 import { User, State } from '../src/models/redux';
+import Register from './Register';
 import Navbar from './components/Navbar';
+import ProductContainer from './ProductsContainer';
+import ErrorPage from './ErrorPage';
+import ProductPage from './ProductPage';
 
 type Props = { user: User; fetchUser: any };
 
@@ -34,11 +37,13 @@ const AppRoutes: React.FC<Props> = ({ user, fetchUser }) => {
     <>
       <Routes>
         <Route element={<WithNav />}>
-          <Route path='/' element={<>asd</>} />
+          <Route path='/product' element={<ProductContainer />} />
+          <Route path='/product/:productName' element={<ProductPage />} />
         </Route>
         <Route element={<WithoutNav />}>
           <Route path='/register' element={<Register />} />
         </Route>
+        <Route path='*' element={<ErrorPage />} />
       </Routes>
     </>
   );

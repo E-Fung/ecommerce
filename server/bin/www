@@ -10,18 +10,9 @@ var http = require('http');
 var models = require('../db');
 const populateProducts = require('../seed/product');
 
-// models.sequelize
-//   .drop()
-//   .then(() => {
-//     console.log('Tables Dropped');
-//   })
-//   .catch((err) => console.log(err));
-
 models.sequelize
   .sync()
-  .then(() => {
-    populateProducts();
-  })
+  .then(() => {})
   .catch((err) => console.log(err));
 
 /**

@@ -1,6 +1,20 @@
 const Product = require('../db').Product;
+const { Op } = require('@sequelize/core');
 
-//see if you can combine getAll with a whereParams={} object
+const ProductCategory = (param) => {
+  switch (param) {
+    case 'men':
+      return "men's clothing";
+    case 'women':
+      return "women's clothing";
+    case 'jewelery':
+      return 'jewelery';
+    case 'electronics':
+      return 'electronics';
+    default:
+      return '';
+  }
+};
 
 module.exports = {
   add(req, res) {
@@ -8,12 +22,13 @@ module.exports = {
       .then((product) => res.status(201).send(product))
       .catch((error) => res.status(400).send(error));
   },
-  getAllByCategory(req, res) {
-    return Product.findAll({
-      where: {
-        category: req.body.category,
-      },
-    })
+  getProducts(req, res) {
+    const category = req.query['category'];
+    const filters = {};
+    if (category) {
+      filters.category = ProductCategory(category);
+    }
+    return Product.findAll({ where: filters })
       .then((products) => {
         if (!products) {
           return res.status(404).send({
@@ -24,21 +39,9 @@ module.exports = {
       })
       .catch((error) => res.status(400).send(error));
   },
-  getAll(req, res) {
-    console.log('Getting All');
-    return Product.findAll()
-      .then((products) => {
-        if (!products) {
-          return res.status(404).send({
-            message: 'products not found',
-          });
-        }
-        return res.status(200).send(products);
-      })
-      .catch((error) => res.status(400).send(error));
-  },
-  getById(req, res) {
-    return Product.findOne({ where: { id: req.body.id } })
+  getByName(req, res) {
+    const name = req.query['name'];
+    return Product.findOne({ where: { name: { [Op.startsWith]: name } } })
       .then((product) => {
         if (!product) {
           return res.status(404).send({

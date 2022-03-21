@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { User, State } from '../models/redux';
 import { logout } from '../redux/utils/thunkCreators';
@@ -12,8 +12,7 @@ type Props = { user: User; logout: any };
 const Navbar: React.FC<Props> = ({ user, logout }) => {
   const [userMenu, setUserMenu] = useState<boolean>(false);
   const [shopMenu, setShopMenu] = useState<boolean>(false);
-
-  let location: string = useLocation().pathname;
+  const [searchParams] = useSearchParams();
 
   const menuItems = useMemo(() => {
     return [
@@ -57,7 +56,7 @@ const Navbar: React.FC<Props> = ({ user, logout }) => {
           </div>
           <div className='flex-1 flex items-center justify-center sm:items-stretch sm:justify-start'>
             {/* Logo, and menu items */}
-            <Link to={'/'}>
+            <Link to={'/product'}>
               <div className='flex-shrink-0 flex items-center'>
                 {/* <img className='block lg:hidden h-16 w-auto' src={logo} alt='' />
                 <img className='hidden lg:block h-16 w-auto' src={logo} alt='' /> */}
@@ -67,10 +66,11 @@ const Navbar: React.FC<Props> = ({ user, logout }) => {
             <div className='hidden items-center sm:flex sm:ml-6'>
               <div className='flex space-x-4'>
                 {menuItems.map(([link, title]) => (
-                  <Link to={`/${link}`} key={title}>
+                  <Link to={`/product?category=${link}`}>
                     <div
+                      key={title}
                       className={`text-white hover:bg-dark hover:text-white px-3 py-2 rounded-md text-sm font-medium ${
-                        location === `/${link}` ? 'bg-accent' : ''
+                        searchParams.get('category') === link ? 'bg-accent' : ''
                       }`}
                     >
                       {title}
@@ -172,11 +172,12 @@ const Navbar: React.FC<Props> = ({ user, logout }) => {
         <div className='sm:hidden' id='mobile-menu'>
           <div className='px-2 pt-2 pb-3 space-y-1'>
             {menuItems.map(([link, title]) => (
-              <Link to={`/${link}`} key={title}>
+              <Link to={`/product?${link}`}>
                 <div
+                  key={title}
                   onClick={toggleShopMenu}
                   className={`text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium ${
-                    location === `/${link}` ? 'bg-gray-900 text-white' : ''
+                    searchParams.get('category') === link ? 'bg-gray-900 text-white' : ''
                   }`}
                 >
                   {title}

@@ -21,7 +21,6 @@ module.exports = {
     if (password.length < 6) {
       return res.status(400).json({ error: 'Password must be at least 6 characters' });
     }
-    console.log('register');
     return User.create(req.body)
       .then((user) => {
         const token = jwt.sign({ userId: user.dataValues.userId }, process.env.ACCESS_TOKEN_SECRET);
