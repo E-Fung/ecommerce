@@ -40,14 +40,27 @@ module.exports = {
   },
 
   login(req, res, next) {
+    const { password, email } = req.body;
+    if (!password || !email) {
+      return res.status(400).json({ error: 'Email and password required' });
+    }
+
     return User.findOne({
       where: {
         email: req.body.email,
       },
     })
       .then((user) => {
+        if (!user) {
+          console.log({ error: `No user found for email: ${email}` });
+          res.status(401).json({ error: 'Wrong email and/or password' });
+        } else if (!user.correctPassword(password)) {
+          console.log({ error: 'Wrong email and/or password' });
+          res.status(401).json({ error: 'Wrong email and/or password' });
+        }
+
         const token = jwt.sign({ userId: user.dataValues.userId }, process.env.ACCESS_TOKEN_SECRET);
-        return res.status(200).json({ user, token });
+        return res.status(200).json({ ...user.dataValues, token });
       })
       .catch((error) => {
         next(error);

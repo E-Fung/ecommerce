@@ -1,6 +1,6 @@
 export interface State {
   user: User;
-  // cart: CartItem[];
+  cart: CartItem[];
   products: Product[];
 }
 
@@ -33,7 +33,6 @@ export interface UserAction {
 }
 
 // Product
-
 export interface Product {
   productId: number;
   name: string;

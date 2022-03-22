@@ -10,7 +10,7 @@ export const userReducer = (state = initialState, action: UserAction) => {
     case ActionTypes.GET_USER:
       return action.user;
     case ActionTypes.DROP_USER:
-      return {};
+      return { isFetching: true };
     default:
       return state;
   }
