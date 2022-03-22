@@ -1,27 +1,25 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { LockClosedIcon } from '@heroicons/react/solid';
-import { register } from './redux/utils/thunkCreators';
+import { login } from './redux/utils/thunkCreators';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import { User, State } from './models/redux';
 
-type Props = { user: User; register: any };
-const Register: React.FC<Props> = (props) => {
-  const { register, user } = props;
+type Props = { user: User; login: any };
+const LoginPage: React.FC<Props> = (props) => {
+  const { login, user } = props;
 
   const handleRegister = async (event: any) => {
     event.preventDefault();
-    const name = event.target.name.value;
     const email = event.target.email.value;
     const password = event.target.password.value;
-    await register({ name, email, password });
+    await login({ email, password });
   };
 
   const registItems = useMemo(() => {
     //type, Title, ID
     return [
-      ['text', 'Name', 'name'],
       ['email', 'Email address', 'email-address'],
       ['password', 'Password', 'password'],
     ];
@@ -38,7 +36,7 @@ const Register: React.FC<Props> = (props) => {
           <Link to={'/product'}>
             <img className='mx-auto h-12 w-auto' src='https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg' alt='Workflow' />
           </Link>
-          <h2 className='mt-6 text-center text-3xl font-extrabold'>Register your account</h2>
+          <h2 className='mt-6 text-center text-3xl font-extrabold'>Login</h2>
         </div>
         <form className='mt-8 space-y-6' action='#' onSubmit={handleRegister}>
           <input type='hidden' name='remember' defaultValue='true' />
@@ -68,9 +66,9 @@ const Register: React.FC<Props> = (props) => {
               <span className='absolute left-0 inset-y-0 flex items-center pl-3'>
                 <LockClosedIcon className='h-5 w-5 text-indigo-500 group-hover:text-indigo-400' aria-hidden='true' />
               </span>
-              Register
+              Login
             </button>
-            <Link to={'/login'}>login</Link>
+            <Link to={'/register'}>register</Link>
           </div>
         </form>
       </div>
@@ -86,10 +84,10 @@ const mapStateToProps = (state: State) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    register: (credentials: { name: string; email: string; password: string }) => {
-      dispatch(register(credentials));
+    login: (credentials: { email: string; password: string }) => {
+      dispatch(login(credentials));
     },
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { fetchProducts } from './redux/utils/thunkCreators';
 import { connect } from 'react-redux';
-import { State } from './models/redux';
-import { Product } from './models/redux';
+import { State, Product } from './models/redux';
 import ProductCard from './components/ProductCard';
 
 type Props = { fetchProducts: any; products: Product[] };

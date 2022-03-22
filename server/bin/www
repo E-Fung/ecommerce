@@ -11,8 +11,15 @@ var models = require('../db');
 const populateProducts = require('../seed/product');
 
 models.sequelize
-  .sync()
+  .drop()
   .then(() => {})
+  .catch((err) => console.log(err));
+
+models.sequelize
+  .sync({ force: true })
+  .then(() => {
+    populateProducts();
+  })
   .catch((err) => console.log(err));
 
 /**
