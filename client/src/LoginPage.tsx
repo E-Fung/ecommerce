@@ -1,21 +1,31 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { LockClosedIcon } from '@heroicons/react/solid';
-import { login } from './redux/utils/thunkCreators';
+import { login, fetchCart } from './redux/utils/thunkCreators';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import { User, State } from './models/redux';
+import { User, State, CartItem } from './models/redux';
 
-type Props = { user: User; login: any };
+type Props = { user: User; login: any; cart: CartItem[]; fetchCart: any };
 const LoginPage: React.FC<Props> = (props) => {
-  const { login, user } = props;
+  const { login, user, cart, fetchCart } = props;
 
-  const handleRegister = async (event: any) => {
+  const handleLogin = async (event: any) => {
     event.preventDefault();
     const email = event.target.email.value;
     const password = event.target.password.value;
     await login({ email, password });
   };
+
+  useEffect(() => {
+    (async () => {
+      if (user.email && cart.length) {
+        //combine cart from redux and db
+        await fetchCart(cart);
+        console.log('after fetching cart');
+      }
+    })();
+  }, [user]);
 
   const registItems = useMemo(() => {
     //type, Title, ID
@@ -38,7 +48,7 @@ const LoginPage: React.FC<Props> = (props) => {
           </Link>
           <h2 className='mt-6 text-center text-3xl font-extrabold'>Login</h2>
         </div>
-        <form className='mt-8 space-y-6' action='#' onSubmit={handleRegister}>
+        <form className='mt-8 space-y-6' action='#' onSubmit={handleLogin}>
           <input type='hidden' name='remember' defaultValue='true' />
           <div className='rounded-md shadow-sm -space-y-px'>
             {registItems.map(([type, title, id]) => (
@@ -79,6 +89,7 @@ const LoginPage: React.FC<Props> = (props) => {
 const mapStateToProps = (state: State) => {
   return {
     user: state.user,
+    cart: state.cart,
   };
 };
 
@@ -86,6 +97,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     login: (credentials: { email: string; password: string }) => {
       dispatch(login(credentials));
+    },
+    fetchCart: (currCart: CartItem[]) => {
+      dispatch(fetchCart(currCart));
     },
   };
 };

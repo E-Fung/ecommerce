@@ -79,25 +79,26 @@ export const addCart = (params: CartItem) => async (dispatch: Dispatch) => {
       await axios.post('http://localhost:5000/cart', params);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
-//thunk database action reducer reducerfunction
-export const fetchCart = () => async (dispatch: Dispatch) => {
-  try {
-    const { data } = await axios.get('http://localhost:5000/cart'); //setup route such that it uses tkn to find user
-    dispatch(got_Cart(data));
-  } catch (error) {
-    console.log(error);
-  }
+//update the database, then pull and override the cart
+export const fetchCart = (currCart: CartItem[]) => async (dispatch: Dispatch) => {
+  let promiseArray: any[] = [];
+  currCart.forEach(async (product: CartItem) => {
+    promiseArray.push(axios.post('http://localhost:5000/cart', product));
+  });
+  await Promise.all(promiseArray);
+  const { data } = await axios.get('http://localhost:5000/cart');
+  dispatch(got_Cart(data));
 };
 
 export const dropCart = () => async (dispatch: Dispatch) => {
   try {
     dispatch(drop_Cart());
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -105,7 +106,7 @@ export const adjustCart = (params: CartItem) => async (dispatch: Dispatch) => {
   try {
     dispatch(adjust_Cart(params));
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -116,6 +117,6 @@ export const fetchProducts = (params: string) => async (dispatch: Dispatch) => {
     let { data }: { data: Product[] } = await axios.get(`http://localhost:5000/product?category=${params}`);
     dispatch(got_Products(data));
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };

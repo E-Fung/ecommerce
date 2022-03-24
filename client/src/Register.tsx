@@ -1,14 +1,14 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { LockClosedIcon } from '@heroicons/react/solid';
-import { register } from './redux/utils/thunkCreators';
+import { register, fetchCart } from './redux/utils/thunkCreators';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import { User, State } from './models/redux';
+import { User, State, CartItem } from './models/redux';
 
-type Props = { user: User; register: any };
+type Props = { user: User; register: any; cart: CartItem[]; fetchCart: any };
 const Register: React.FC<Props> = (props) => {
-  const { register, user } = props;
+  const { register, user, cart, fetchCart } = props;
 
   const handleRegister = async (event: any) => {
     event.preventDefault();
@@ -17,6 +17,15 @@ const Register: React.FC<Props> = (props) => {
     const password = event.target.password.value;
     await register({ name, email, password });
   };
+
+  useEffect(() => {
+    (async () => {
+      if (user.email && cart.length) {
+        //combine cart from redux and db
+        await fetchCart(cart);
+      }
+    })();
+  }, [user]);
 
   const registItems = useMemo(() => {
     //type, Title, ID
@@ -81,6 +90,7 @@ const Register: React.FC<Props> = (props) => {
 const mapStateToProps = (state: State) => {
   return {
     user: state.user,
+    cart: state.cart,
   };
 };
 
@@ -88,6 +98,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     register: (credentials: { name: string; email: string; password: string }) => {
       dispatch(register(credentials));
+    },
+    fetchCart: (currCart: CartItem[]) => {
+      dispatch(fetchCart(currCart));
     },
   };
 };
