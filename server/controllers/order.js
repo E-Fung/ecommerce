@@ -1,7 +1,5 @@
 const Order = require('../db').Order;
 
-//get all by id, should i do some pagination function?
-
 module.exports = {
   add(req, res) {
     return Product.create(req.body)

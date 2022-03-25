@@ -21,7 +21,6 @@ const Register: React.FC<Props> = (props) => {
   useEffect(() => {
     (async () => {
       if (user.email && cart.length) {
-        //combine cart from redux and db
         await fetchCart(cart);
       }
     })();
