@@ -20,7 +20,9 @@ router.post('/product', productController.add);
 router.get('/product', productController.getProducts);
 router.get('/productByName', productController.getByName);
 
+//Cart
 router.post('/cart', productInCartController.add);
+router.get('/cart', productInCartController.getById);
 
 //User
 router.post('/user', userController.alterPhoto);

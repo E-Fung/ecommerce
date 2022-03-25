@@ -5,10 +5,8 @@ export const addItemToCart = (state: CartItem[], payload: CartItem) => {
   const i = state.findIndex((element) => element.productId === payload!.productId);
   if (i > -1) {
     return state.map((item: CartItem, index) => {
-      console.log(i, index);
       if (index === i) {
         const itemCopy = { ...item };
-        console.log(itemCopy.quantity, payload.quantity);
         itemCopy.quantity += payload.quantity;
         return itemCopy;
       }

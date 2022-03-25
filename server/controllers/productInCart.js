@@ -3,15 +3,17 @@ const { updateOrCreate } = require('./utils');
 
 module.exports = {
   add(req, res) {
-    const newItem = { userId: req.body.userId, productId: req.body.productId, quantity: req.body.quantity };
+    //Good
+    const newItem = { userId: req.user.userId, productId: req.body.productId, quantity: req.body.quantity };
     return updateOrCreate(ProductInCart, newItem)
       .then((product) => res.status(201).send(product))
       .catch((error) => res.status(400).send(error));
   },
   getById(req, res) {
+    //Good
     return ProductInCart.findAll({
       where: {
-        userId: req.body.user,
+        userId: req.user.userId,
       },
       order: [['updatedAt', 'DESC']],
     })
@@ -26,5 +28,4 @@ module.exports = {
       .catch((error) => res.status(400).send(error));
   },
 };
-
 //alterQuantity
