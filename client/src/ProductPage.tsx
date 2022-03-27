@@ -46,10 +46,10 @@ const ProductPage: React.FC<Props> = ({ user, addCart }) => {
         <img src={details.photoUrl} alt='' />
       </div>
       <div className='p-10 space-y-5'>
-        <div>{details.name}</div>
+        <div className='text-2xl font-bold'>{details.name}</div>
         <div>Total Purchased: {details.totalPurchased}</div>
-        <div>${details.price}</div>
-        <div>{details.description}</div>
+        <div>${details.price.toFixed(2)}</div>
+        <div className='text-gray-500'>{details.description}</div>
         <form onSubmit={handleAddToCart} className='space-y-5'>
           <div>
             <label htmlFor='quantity'>Quantity: </label>

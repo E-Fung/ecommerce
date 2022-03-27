@@ -5,6 +5,7 @@ import { register, fetchCart } from './redux/utils/thunkCreators';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import { User, State, CartItem } from './models/redux';
+import { logo } from './assets';
 
 type Props = { user: User; register: any; cart: CartItem[]; fetchCart: any };
 const Register: React.FC<Props> = (props) => {
@@ -44,7 +45,7 @@ const Register: React.FC<Props> = (props) => {
       <div className='max-w-md w-full space-y-8'>
         <div>
           <Link to={'/product'}>
-            <img className='mx-auto h-12 w-auto' src='https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg' alt='Workflow' />
+            <img className='mx-auto h-12 w-auto' src={logo} alt='' />
           </Link>
           <h2 className='mt-6 text-center text-3xl font-extrabold'>Register your account</h2>
         </div>
@@ -71,14 +72,16 @@ const Register: React.FC<Props> = (props) => {
           <div>
             <button
               type='submit'
-              className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+              className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-highlight focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
             >
               <span className='absolute left-0 inset-y-0 flex items-center pl-3'>
-                <LockClosedIcon className='h-5 w-5 text-indigo-500 group-hover:text-indigo-400' aria-hidden='true' />
+                <LockClosedIcon className='h-5 w-5 text-white' aria-hidden='true' />
               </span>
               Register
             </button>
-            <Link to={'/login'}>login</Link>
+            <div className='flex p-8 underline justify-center'>
+              <Link to={'/login'}>login</Link>
+            </div>
           </div>
         </form>
       </div>
