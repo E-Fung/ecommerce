@@ -12,15 +12,18 @@ const populateProducts = require('../seed/product');
 
 models.sequelize
   .drop()
-  .then(() => {})
-  .catch((err) => console.log(err));
-
-models.sequelize
-  .sync({ force: true })
   .then(() => {
-    populateProducts();
+    console.log('Dropped');
   })
   .catch((err) => console.log(err));
+
+// models.sequelize
+//   .sync({ force: true })
+//   .then(() => {
+//     console.log('Populating');
+//     populateProducts();
+//   })
+//   .catch((err) => console.log(err));
 
 /**
  * Get port from environment and store in Express.
