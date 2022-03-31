@@ -40,7 +40,7 @@ export const adjustCart = (state: CartItem[], payload: null | CartItem) => {
   return state.map((item) => {
     if (item.productId === payload!.productId) {
       const itemCopy = { ...item };
-      itemCopy.quantity += payload!.quantity;
+      itemCopy.quantity = payload!.quantity;
       return itemCopy;
     } else {
       return item;
