@@ -11,7 +11,7 @@ const CartPage: React.FC<Props> = ({ cart }) => {
 
   useEffect(() => {
     loadProducts();
-  }, []);
+  }, [cart]);
 
   const loadProducts = async (): Promise<void> => {
     const tempArray = await getProductsById(cart);

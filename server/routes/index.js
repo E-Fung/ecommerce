@@ -24,6 +24,8 @@ router.get('/productById', productController.getById);
 //Cart
 router.post('/cart', productInCartController.add);
 router.get('/cart', productInCartController.getById);
+router.post('/adjustCart', productInCartController.adjust);
+router.post('/deleteCartItem', productInCartController.delete);
 
 //User
 router.post('/user', userController.alterPhoto);

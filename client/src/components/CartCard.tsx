@@ -1,13 +1,21 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Product, CartItem } from '../models/redux';
 import { connect } from 'react-redux';
-import { adjustCart } from '../redux/utils/thunkCreators';
+import { adjustCart, deleteCartItem } from '../redux/utils/thunkCreators';
 
-type Props = { product: Product; quantity: number; adjustCart: any };
+type Props = { product: Product; quantity: number; adjustCart: any; deleteCartItem: any };
 
-const CartCard: React.FC<Props> = ({ product, quantity, adjustCart }) => {
+const CartCard: React.FC<Props> = ({ product, quantity, adjustCart, deleteCartItem }) => {
   const [tempQty, setTempQty] = useState<number>(quantity);
   const [select, setSelect] = useState<boolean>(true);
+
+  useEffect(() => {
+    updateSelect();
+  }, [quantity]);
+
+  const dropdownRange = useMemo(() => {
+    return Array.from({ length: 9 }, (_, i) => i + 1);
+  }, []);
 
   const handleInputEnter = (event: any) => {
     const textInput: HTMLElement = document.querySelector('#quantityInput')!;
@@ -18,9 +26,10 @@ const CartCard: React.FC<Props> = ({ product, quantity, adjustCart }) => {
     }
   };
 
-  const dropdownRange = useMemo(() => {
-    return Array.from({ length: 9 }, (_, i) => i + 1);
-  }, []);
+  const updateSelect = () => {
+    if (quantity < 10) setSelect(true);
+    else setSelect(false);
+  };
 
   const updateQuantity = async (quantity: string) => {
     if (quantity === 'changeType') {
@@ -32,16 +41,13 @@ const CartCard: React.FC<Props> = ({ product, quantity, adjustCart }) => {
     }
   };
 
-  useEffect(() => {
-    updateSelect();
-  }, [quantity]);
-
-  const updateSelect = () => {
-    if (quantity < 10) setSelect(true);
-    else setSelect(false);
+  const deleteItem = async () => {
+    console.log('Awd');
+    const deleteItem = { productId: product.productId };
+    console.log(deleteItem);
+    await deleteCartItem(deleteItem);
+    console.log('done');
   };
-
-  const deleteItem = () => {};
 
   return (
     <div className='flex text-black w-full p-4 border-4'>
@@ -96,7 +102,9 @@ const CartCard: React.FC<Props> = ({ product, quantity, adjustCart }) => {
                 </form>
               )}
             </div>
-            <div onClick={deleteItem}>Delete</div>
+            <div>
+              <button onClick={() => deleteItem()}>Delete</button>
+            </div>
           </div>
         </div>
         <div className='border-2 font-bold'>${(product?.price! * quantity).toFixed(2)}</div>
@@ -109,6 +117,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     adjustCart: (params: CartItem) => {
       dispatch(adjustCart(params));
+    },
+    deleteCartItem: (params: CartItem) => {
+      dispatch(deleteCartItem(params));
     },
   };
 };

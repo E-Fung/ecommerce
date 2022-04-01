@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { add_Cart, got_Cart, drop_Cart, adjust_Cart } from '../actions/cartActions';
+import { add_Cart, got_Cart, drop_Cart, adjust_Cart, remove_Cart_Item } from '../actions/cartActions';
 import { set_Fetching_Status, got_User, drop_User } from '../actions/userActions';
 import { got_Products } from '../actions/productsActions';
 import { CartItem, Product } from '../../models/redux';
@@ -74,10 +74,10 @@ export const logout = () => async (dispatch: any) => {
 //if user is logged in, add to database, else just add to store
 export const addCart = (params: CartItem) => async (dispatch: Dispatch) => {
   try {
-    dispatch(add_Cart(params));
     if (params.userId) {
       await axios.post('http://localhost:5000/cart', params);
     }
+    dispatch(add_Cart(params));
   } catch (error) {
     console.error(error);
   }
@@ -86,9 +86,12 @@ export const addCart = (params: CartItem) => async (dispatch: Dispatch) => {
 //update the database, then pull and override the cart
 export const fetchCart = (currCart: CartItem[]) => async (dispatch: Dispatch) => {
   let promiseArray: any[] = [];
-  currCart.forEach(async (product: CartItem) => {
-    promiseArray.push(axios.post('http://localhost:5000/cart', product));
-  });
+  if (currCart) {
+    //integrates carts is exist
+    currCart.forEach(async (product: CartItem) => {
+      promiseArray.push(axios.post('http://localhost:5000/cart', product));
+    });
+  }
   await Promise.all(promiseArray);
   const { data } = await axios.get('http://localhost:5000/cart');
   dispatch(got_Cart(data));
@@ -104,8 +107,21 @@ export const dropCart = () => async (dispatch: Dispatch) => {
 
 export const adjustCart = (params: CartItem) => async (dispatch: Dispatch) => {
   try {
+    await axios.post('http://localhost:5000/adjustCart', params);
     dispatch(adjust_Cart(params));
   } catch (error) {
+    console.error(error);
+  }
+};
+
+export const deleteCartItem = (params: CartItem) => async (dispatch: Dispatch) => {
+  console.log('thunkawd');
+  try {
+    // await axios.post('http://localhost:5000/deleteCartItem', params);
+    console.log('thunk');
+    dispatch(remove_Cart_Item(params));
+  } catch (error) {
+    console.log('thunk failed');
     console.error(error);
   }
 };
