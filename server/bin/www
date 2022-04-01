@@ -7,20 +7,6 @@
 var app = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
-var models = require('../db');
-const populateProducts = require('../seed/product');
-
-models.sequelize
-  .drop()
-  .then(() => {})
-  .catch((err) => console.log(err));
-
-models.sequelize
-  .sync({ force: true })
-  .then(() => {
-    populateProducts();
-  })
-  .catch((err) => console.log(err));
 
 /**
  * Get port from environment and store in Express.

@@ -9,6 +9,7 @@ export interface CartItem {
   quantity: number;
   productId: number;
   userId?: number;
+  Product: Product;
 }
 
 export interface CartAction {

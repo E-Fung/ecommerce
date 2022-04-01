@@ -11,8 +11,10 @@ const ProductsContainer: React.FC<Props> = ({ fetchProducts, products }) => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    const category = searchParams.get('category');
-    fetchProducts(category ? category : '');
+    (async () => {
+      const category = searchParams.get('category');
+      await fetchProducts(category ? category : '');
+    })();
   }, [searchParams]);
 
   return (

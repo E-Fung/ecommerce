@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { fetchUser } from './redux/utils/thunkCreators';
+import { fetchUser, fetchCart } from './redux/utils/thunkCreators';
 import { Routes, Route, Outlet, Navigate } from 'react-router-dom';
-import { User, State } from '../src/models/redux';
+import { User, State, CartItem } from '../src/models/redux';
 import Register from './Register';
 import Navbar from './components/Navbar';
 import ProductContainer from './ProductsContainer';
@@ -11,12 +11,20 @@ import ProductPage from './ProductPage';
 import CartPage from './CartPage';
 import LoginPage from './LoginPage';
 
-type Props = { user: User; fetchUser: any };
+type Props = { user: User; fetchUser: any; fetchCart: any };
 
-const AppRoutes: React.FC<Props> = ({ user, fetchUser }) => {
+const AppRoutes: React.FC<Props> = ({ user, fetchUser, fetchCart }) => {
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
+
+  useEffect(() => {
+    if (user.email) {
+      (async () => {
+        await fetchCart();
+      })();
+    }
+  }, [user]);
 
   const WithNav = () => {
     return (
@@ -60,6 +68,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchUser() {
       dispatch(fetchUser());
+    },
+    fetchCart(currCart: CartItem[]) {
+      dispatch(fetchCart(currCart));
     },
   };
 };

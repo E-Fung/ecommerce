@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "devstart": "nodemon ./bin/www"
+    "dev": "nodemon ./bin/www",
+    "debug": "nodemon  --inspect ./bin/www",
+    "seed": "node seed/product.js"
   },
   "dependencies": {
     "@sequelize/core": "^7.0.0-alpha.10",

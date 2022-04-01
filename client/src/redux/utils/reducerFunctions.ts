@@ -19,6 +19,10 @@ export const addItemToCart = (state: CartItem[], payload: CartItem) => {
   return cartCopy;
 };
 
+export const deleteItemFromCart = (state: CartItem[], payload: null | CartItem) => {
+  return state.filter((item) => item.productId !== payload!.productId);
+};
+
 // export const integrateCart = (state: CartItem[], payload: null | CartItem[]) => {
 //   const cartCopy: CartItem[] = [...state];
 
@@ -40,7 +44,7 @@ export const adjustCart = (state: CartItem[], payload: null | CartItem) => {
   return state.map((item) => {
     if (item.productId === payload!.productId) {
       const itemCopy = { ...item };
-      itemCopy.quantity += payload!.quantity;
+      itemCopy.quantity = payload!.quantity;
       return itemCopy;
     } else {
       return item;

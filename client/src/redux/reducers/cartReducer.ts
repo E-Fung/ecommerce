@@ -1,6 +1,6 @@
 import { ActionTypes } from '../constants/action-types';
 import { CartItem, CartAction } from '../../models/redux';
-import { addItemToCart, adjustCart } from '../utils/reducerFunctions';
+import { addItemToCart, adjustCart, deleteItemFromCart } from '../utils/reducerFunctions';
 
 const initialState: CartItem[] = [];
 
@@ -11,6 +11,8 @@ export const cartReducer = (state = initialState, action: CartAction) => {
       return addItemToCart(state, action.cartItem!);
     case ActionTypes.ADJUST_CART:
       return adjustCart(state, action.cartItem!);
+    case ActionTypes.DELETE_CART_ITEM:
+      return deleteItemFromCart(state, action.cartItem!);
     case ActionTypes.DROP_CART:
       return [];
     case ActionTypes.GET_CART:

@@ -28,3 +28,10 @@ export const adjust_Cart = (cartItem: CartItem) => {
     cartItem,
   };
 };
+
+export const remove_Cart_Item = (cartItem: CartItem) => {
+  return {
+    type: ActionTypes.DELETE_CART_ITEM,
+    cartItem,
+  };
+};

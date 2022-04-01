@@ -28,12 +28,8 @@ module.exports = {
       })
       .catch((error) => {
         if (error.name === 'SequelizeUniqueConstraintError') {
-          console.log('1');
-
           return res.status(401).json({ error: 'User already exists' });
         } else if (error.name === 'SequelizeValidationError') {
-          console.log('2');
-
           return res.status(401).json({ error: 'Validation error' });
         } else next(error);
       });

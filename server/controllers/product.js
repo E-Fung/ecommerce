@@ -52,4 +52,17 @@ module.exports = {
       })
       .catch((error) => res.status(400).send(error));
   },
+  getById(req, res) {
+    const productId = req.query['productId'];
+    return Product.findOne({ where: { productId: productId } })
+      .then((product) => {
+        if (!product) {
+          return res.status(404).send({
+            message: 'product not found',
+          });
+        }
+        return res.status(200).send(product);
+      })
+      .catch((error) => res.status(400).send(error));
+  },
 };
