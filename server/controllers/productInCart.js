@@ -1,4 +1,5 @@
 const ProductInCart = require('../db').ProductInCart;
+const Product = require('../db').Product;
 const { updateOrCreate } = require('./utils');
 
 module.exports = {
@@ -43,6 +44,10 @@ module.exports = {
         userId: req.user.userId,
       },
       order: [['updatedAt', 'DESC']],
+      include: {
+        model: Product,
+        required: true,
+      },
     })
       .then((ProductInCart) => {
         if (!ProductInCart) {

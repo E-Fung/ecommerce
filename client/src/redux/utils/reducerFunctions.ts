@@ -20,11 +20,7 @@ export const addItemToCart = (state: CartItem[], payload: CartItem) => {
 };
 
 export const deleteItemFromCart = (state: CartItem[], payload: null | CartItem) => {
-  console.log(state);
-  console.log([...state.filter((item) => item.productId !== payload!.productId)]);
-  // return state;
-  return state;
-  // return [...state.filter((item) => item.productId !== payload!.productId)];
+  return state.filter((item) => item.productId !== payload!.productId);
 };
 
 // export const integrateCart = (state: CartItem[], payload: null | CartItem[]) => {

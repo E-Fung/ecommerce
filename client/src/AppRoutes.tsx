@@ -24,7 +24,7 @@ const AppRoutes: React.FC<Props> = ({ user, fetchUser, fetchCart }) => {
         await fetchCart();
       })();
     }
-  });
+  }, [user]);
 
   const WithNav = () => {
     return (

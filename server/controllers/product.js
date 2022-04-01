@@ -54,7 +54,6 @@ module.exports = {
   },
   getById(req, res) {
     const productId = req.query['productId'];
-    console.log('id', productId);
     return Product.findOne({ where: { productId: productId } })
       .then((product) => {
         if (!product) {

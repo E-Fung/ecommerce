@@ -1,37 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { CartItem, State, Product } from './models/redux';
+import { CartItem, State } from './models/redux';
 import CartCard from './components/CartCard';
-import { getProductsById } from './services/services';
 
 type Props = { cart: CartItem[] };
 
 const CartPage: React.FC<Props> = ({ cart }) => {
-  const [cartProducts, setCartProducts] = useState<Product[]>();
-
-  useEffect(() => {
-    loadProducts();
-  }, [cart]);
-
-  const loadProducts = async (): Promise<void> => {
-    const tempArray = await getProductsById(cart);
-    const tempDetails: Product[] = tempArray.map((productData) => {
-      return productData.data;
-    });
-    setCartProducts(tempDetails);
-  };
-
   const getTotalItems = (): string => {
-    let totalQuantity: number = cartProducts!.reduce(function (total: number, product: Product, index) {
-      return total + cart[index].quantity;
+    let totalQuantity: number = cart!.reduce(function (total: number, product: CartItem, index) {
+      return total + product.quantity;
     }, 0);
     return `Subtotal (${totalQuantity} item${totalQuantity === 1 ? '' : 's'}):`;
   };
 
   const getTotalCost = (): string => {
-    return cartProducts!
-      .reduce(function (total: number, product: Product, index) {
-        return total + product.price * cart[index].quantity;
+    return cart!
+      .reduce(function (total: number, product: CartItem, index) {
+        return total + product.Product.price * product.quantity;
       }, 0)
       .toFixed(2);
   };
@@ -44,16 +29,14 @@ const CartPage: React.FC<Props> = ({ cart }) => {
     );
   }
 
-  if (!cartProducts) {
-    return <></>;
-  }
-
   return (
     <div className='justify-center flex flex-wrap space-y-2 max-w-7xl mx-auto p-4 sm:px-6 lg:px-8'>
       <div className='bg-white w-full space-y-4'>
         <div className='text-black text-xl pl-4 pt-4 font-semibold'>Shopping Cart</div>
-        {cartProducts.map((product: Product, index: number) => (
-          <CartCard product={product} quantity={cart[index].quantity} key={product.productId} />
+        {cart.map((product: CartItem, index: number) => (
+          <div key={product.productId}>
+            <CartCard product={product.Product} quantity={product.quantity} key={product.productId} />
+          </div>
         ))}
         <div className='flex justify-end p-4 space-x-2 border-4 text-black'>
           <div className='font-semibold'>{getTotalItems()} </div>

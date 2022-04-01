@@ -42,11 +42,8 @@ const CartCard: React.FC<Props> = ({ product, quantity, adjustCart, deleteCartIt
   };
 
   const deleteItem = async () => {
-    console.log('Awd');
     const deleteItem = { productId: product.productId };
-    console.log(deleteItem);
     await deleteCartItem(deleteItem);
-    console.log('done');
   };
 
   return (

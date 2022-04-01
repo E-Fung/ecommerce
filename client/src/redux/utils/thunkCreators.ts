@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { add_Cart, got_Cart, drop_Cart, adjust_Cart, remove_Cart_Item } from '../actions/cartActions';
-import { set_Fetching_Status, got_User, drop_User } from '../actions/userActions';
+import { got_User, drop_User } from '../actions/userActions';
 import { got_Products } from '../actions/productsActions';
 import { CartItem, Product } from '../../models/redux';
 import { Dispatch } from 'redux';
@@ -28,14 +28,11 @@ axios.interceptors.request.use(async function (config) {
 //on login, return everything, pw is encrptyed
 
 export const fetchUser = () => async (dispatch: Dispatch) => {
-  dispatch(set_Fetching_Status(true));
   try {
     const { data } = await axios.get('http://localhost:5000/auth/user');
     dispatch(got_User(data));
   } catch (error) {
     console.error(error);
-  } finally {
-    dispatch(set_Fetching_Status(false));
   }
 };
 
@@ -115,13 +112,10 @@ export const adjustCart = (params: CartItem) => async (dispatch: Dispatch) => {
 };
 
 export const deleteCartItem = (params: CartItem) => async (dispatch: Dispatch) => {
-  console.log('thunkawd');
   try {
-    // await axios.post('http://localhost:5000/deleteCartItem', params);
-    console.log('thunk');
+    await axios.post('http://localhost:5000/deleteCartItem', params);
     dispatch(remove_Cart_Item(params));
   } catch (error) {
-    console.log('thunk failed');
     console.error(error);
   }
 };
