@@ -74,7 +74,12 @@ export const addCart = (params: CartItem) => async (dispatch: Dispatch) => {
     if (params.userId) {
       await axios.post('http://localhost:5000/cart', params);
     }
-    dispatch(add_Cart(params));
+    // await addCart({ quantity, userId, productId });
+    // await addCart({ quantity, productId });
+
+    const { data }: any = await axios.get(`http://localhost:5000/productById?productId=${params.productId}`);
+    const temp: CartItem = { ...{ Product: data }, ...params };
+    dispatch(add_Cart(temp));
   } catch (error) {
     console.error(error);
   }
