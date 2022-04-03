@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Product, CartItem } from '../models/redux';
+import { State, Product, CartItem, User } from '../models/redux';
 import { connect } from 'react-redux';
-import { adjustCart, deleteCartItem } from '../redux/utils/thunkCreators';
+import { adjustCartItem, deleteCartItem } from '../redux/utils/thunkCreators';
 
-type Props = { product: Product; quantity: number; adjustCart: any; deleteCartItem: any };
+type Props = { product: Product; user: User; quantity: number; adjustCartItem: any; deleteCartItem: any };
 
-const CartCard: React.FC<Props> = ({ product, quantity, adjustCart, deleteCartItem }) => {
+const CartCard: React.FC<Props> = ({ product, user, quantity, adjustCartItem, deleteCartItem }) => {
   const [tempQty, setTempQty] = useState<number>(quantity);
   const [select, setSelect] = useState<boolean>(true);
 
@@ -35,14 +35,24 @@ const CartCard: React.FC<Props> = ({ product, quantity, adjustCart, deleteCartIt
     if (quantity === 'changeType') {
       setSelect(false);
     } else {
-      const updatedItem = { quantity: Number(quantity), productId: product.productId };
-      await adjustCart(updatedItem);
+      let updatedItem = {};
+      if (user.email) {
+        updatedItem = { quantity: Number(quantity), productId: product.productId, userId: user.email };
+      } else {
+        updatedItem = { quantity: Number(quantity), productId: product.productId };
+      }
+      await adjustCartItem(updatedItem);
       setTempQty(Number(quantity));
     }
   };
 
   const deleteItem = async () => {
-    const deleteItem = { productId: product.productId };
+    let deleteItem = {};
+    if (user.email) {
+      deleteItem = { productId: product.productId, userId: user.email };
+    } else {
+      deleteItem = { productId: product.productId };
+    }
     await deleteCartItem(deleteItem);
   };
 
@@ -110,10 +120,16 @@ const CartCard: React.FC<Props> = ({ product, quantity, adjustCart, deleteCartIt
   );
 };
 
+const mapStateToProps = (state: State) => {
+  return {
+    user: state.user,
+  };
+};
+
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    adjustCart: (params: CartItem) => {
-      dispatch(adjustCart(params));
+    adjustCartItem: (params: CartItem) => {
+      dispatch(adjustCartItem(params));
     },
     deleteCartItem: (params: CartItem) => {
       dispatch(deleteCartItem(params));
@@ -121,4 +137,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(CartCard);
+export default connect(mapStateToProps, mapDispatchToProps)(CartCard);

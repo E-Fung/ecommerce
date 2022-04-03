@@ -1,16 +1,14 @@
 import { ActionTypes } from '../constants/action-types';
 import { UserAction, User } from '../../models/redux';
 
-const initialState: Partial<User> = { isFetching: true };
+const initialState: Partial<User> = {};
 
 export const userReducer = (state = initialState, action: UserAction) => {
   switch (action.type) {
-    // case ActionTypes.SET_FETCHING_STATUS:
-    //   return { ...state, isFetching: action.isFetching };
-    case ActionTypes.GET_USER:
+    case ActionTypes.FETCH_USER:
       return action.user;
     case ActionTypes.DROP_USER:
-      return { isFetching: true };
+      return {};
     default:
       return state;
   }

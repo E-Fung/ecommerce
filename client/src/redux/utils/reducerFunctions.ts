@@ -23,24 +23,7 @@ export const deleteItemFromCart = (state: CartItem[], payload: null | CartItem) 
   return state.filter((item) => item.productId !== payload!.productId);
 };
 
-// export const integrateCart = (state: CartItem[], payload: null | CartItem[]) => {
-//   const cartCopy: CartItem[] = [...state];
-
-//   cartCopy.map((item) => {
-//     if (item.ProductId === payload!.ProductId) {
-//       const itemCopy = { ...item };
-//       itemCopy.quantity = itemCopy.quantity + payload!.quantity;
-//       itemExist = true;
-//       return itemCopy;
-//     }
-//     return item;
-//   });
-
-//   if (!itemExist) cartCopy.push(payload!);
-//   return cartCopy;
-// };
-
-export const adjustCart = (state: CartItem[], payload: null | CartItem) => {
+export const adjustCartItem = (state: CartItem[], payload: null | CartItem) => {
   return state.map((item) => {
     if (item.productId === payload!.productId) {
       const itemCopy = { ...item };
