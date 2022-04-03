@@ -5,7 +5,7 @@ const initialState: Product[] = [];
 
 export const productsReducer = (state = initialState, action: ProductsAction) => {
   switch (action.type) {
-    case ActionTypes.SET_PRODUCTS:
+    case ActionTypes.FETCH_PRODUCTS:
       return action.products;
     default:
       return state;

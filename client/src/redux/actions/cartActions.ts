@@ -1,17 +1,9 @@
 import { ActionTypes } from '../constants/action-types';
 import { CartItem } from '../../models/redux';
 
-export const add_Cart = (cartItem: CartItem) => {
+export const fetch_Cart = (cart: CartItem[]) => {
   return {
-    type: ActionTypes.ADD_TO_CART,
-    cartItem,
-  };
-};
-
-//add cart from db to state
-export const got_Cart = (cart: CartItem[]) => {
-  return {
-    type: ActionTypes.GET_CART,
+    type: ActionTypes.FETCH_CART,
     cart,
   };
 };
@@ -22,9 +14,16 @@ export const drop_Cart = () => {
   };
 };
 
-export const adjust_Cart = (cartItem: CartItem) => {
+export const add_To_Cart = (cartItem: CartItem) => {
   return {
-    type: ActionTypes.ADJUST_CART,
+    type: ActionTypes.ADD_TO_CART,
+    cartItem,
+  };
+};
+
+export const adjust_Cart_Item = (cartItem: CartItem) => {
+  return {
+    type: ActionTypes.ADJUST_CART_ITEM,
     cartItem,
   };
 };

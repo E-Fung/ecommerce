@@ -14,7 +14,6 @@ export const clearOnLogout = () => {
 
 const rootReducer = (state: any, action: any) => {
   if (action.type === CLEAR_ON_LOGOUT) {
-    // set state to initial state
     state = undefined;
   }
   return appReducer(state, action);

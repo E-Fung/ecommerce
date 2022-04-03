@@ -3,11 +3,11 @@ import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { State, User, Product, CartItem } from './models/redux';
 import { getProductsByName } from './services/services';
-import { addCart } from './redux/utils/thunkCreators';
+import { addToCart } from './redux/utils/thunkCreators';
 
-type Props = { user: User; addCart: any };
+type Props = { user: User; addToCart: any };
 
-const ProductPage: React.FC<Props> = ({ user, addCart }) => {
+const ProductPage: React.FC<Props> = ({ user, addToCart }) => {
   const { productName } = useParams();
   const [details, setDetails] = useState<Product>();
 
@@ -26,9 +26,9 @@ const ProductPage: React.FC<Props> = ({ user, addCart }) => {
     const productId: number = details!.productId;
     if (user.userId) {
       const userId = user.userId;
-      await addCart({ quantity, userId, productId });
+      await addToCart({ quantity, userId, productId });
     } else {
-      await addCart({ quantity, productId });
+      await addToCart({ quantity, productId });
     }
   };
 
@@ -83,8 +83,8 @@ const mapStateToProps = (state: State) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    addCart: (params: CartItem) => {
-      dispatch(addCart(params));
+    addToCart: (params: CartItem) => {
+      dispatch(addToCart(params));
     },
   };
 };
