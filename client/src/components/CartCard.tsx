@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { State, Product, CartItem, User } from '../models/redux';
 import { connect } from 'react-redux';
 import { adjustCartItem, deleteCartItem } from '../redux/utils/thunkCreators';
+import { Link } from 'react-router-dom';
 
 type Props = { product: Product; user: User; quantity: number; adjustCartItem: any; deleteCartItem: any };
 
@@ -57,15 +58,17 @@ const CartCard: React.FC<Props> = ({ product, user, quantity, adjustCartItem, de
   };
 
   return (
-    <div className='flex text-black w-full p-4 border-4'>
-      <div className='h-40 w-40 flex items-center justify-center content-center border-2'>
-        <img className='max-h-full max-w-full' src={product?.photoUrl} alt='' />
-      </div>
+    <div className='flex bg-white text-black w-full p-4 border-4 rounded-lg'>
+      <Link to={`/product/${product.name}`}>
+        <div className='h-40 w-40 flex items-center justify-center content-center'>
+          <img className='max-h-full max-w-full' src={product?.photoUrl} alt='' />
+        </div>
+      </Link>
       <div className='flex w-full ml-4 justify-between'>
-        <div className='border-2 flex flex-col'>
+        <div className='flex flex-col space-y-2'>
           <div className='font-medium'>{product?.name}</div>
-          <div className='flex'>
-            <div className='flex bg-gray-300 rounded text-sm p-1 overflow-clip '>
+          <div className='flex space-x-2'>
+            <div className='flex bg-gray-200 rounded text-sm p-1 overflow-clip text-black'>
               <label htmlFor='quantity'>Qty: </label>
               {select && (
                 <select
@@ -73,14 +76,14 @@ const CartCard: React.FC<Props> = ({ product, user, quantity, adjustCartItem, de
                   name='quantity'
                   defaultValue={quantity}
                   onChange={(event) => updateQuantity(event.target.value)}
-                  className='text-black bg-gray-300'
+                  className='outline-0 bg-gray-200'
                 >
                   {dropdownRange.map((number) => (
-                    <option value={number} key={number} className='text-black'>
+                    <option value={number} key={number}>
                       {number}
                     </option>
                   ))}
-                  <option value={'changeType'} key={'changeType'} className='text-black'>
+                  <option value={'changeType'} key={'changeType'}>
                     +10
                   </option>
                 </select>
@@ -100,21 +103,23 @@ const CartCard: React.FC<Props> = ({ product, user, quantity, adjustCartItem, de
                     id='quantityInput'
                     name='quantity'
                     type='number'
+                    className='bg-gray-200'
                     value={tempQty}
                     onChange={(event) => {
                       setTempQty(Number(event.target.value));
                     }}
+                    style={{ width: '45px' }}
                   />
                   <button type='submit'>update</button>
                 </form>
               )}
             </div>
-            <div>
-              <button onClick={() => deleteItem()}>Delete</button>
+            <div className='cursor-pointer hover:text-blue-800 hover:underline' onClick={() => deleteItem()}>
+              Delete
             </div>
           </div>
         </div>
-        <div className='border-2 font-bold'>${(product?.price! * quantity).toFixed(2)}</div>
+        <div className='font-bold'>${(product?.price! * quantity).toFixed(2)}</div>
       </div>
     </div>
   );
