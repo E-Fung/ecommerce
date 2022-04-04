@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { User, State, CartItem } from '../models/redux';
 import { logout } from '../redux/utils/thunkCreators';
@@ -15,6 +15,7 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
   const [shopMenu, setShopMenu] = useState<boolean>(false);
   const [regLogMenu, setRegLogMenu] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const menuItems = useMemo(() => {
     return [
@@ -37,6 +38,7 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
     toggleUserMenu();
     event.preventDefault();
     await logout();
+    navigate('/product');
   };
 
   const sum = cart.reduce((partialSum, currentValue) => partialSum + currentValue.quantity, 0);
@@ -75,7 +77,7 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
                   <Link to={`/product?category=${link}`} key={title}>
                     <div
                       key={title}
-                      className={`text-white hover:bg-light px-3 py-2 rounded-md text-sm font-medium ${
+                      className={`text-white hover:bg-dark px-3 py-2 rounded-md text-sm font-medium ${
                         searchParams.get('category') === link ? 'bg-highlight' : ''
                       }`}
                     >
@@ -88,12 +90,9 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
           </div>
           <div className='absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0'>
             {/* Cart Register/Login button */}
-            {'Hello ' + user.name}
+            {user.email && <div className='hidden sm:flex'>Hello {user.name}</div>}
             <Link to={'/cart'}>
-              <button
-                type='button'
-                className='bg-light p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white'
-              >
+              <button type='button' className='bg-light p-1 rounded-full text-gray-400 hover:text-white '>
                 {/* Cart */}
                 <div className='flex space-x-2 px-2'>
                   <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
@@ -104,7 +103,7 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
                       d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'
                     />
                   </svg>
-                  <div>{sum > 10 ? '10+' : sum}</div>
+                  <div className='text-highlight font-bold'>{sum > 10 ? '10+' : sum}</div>
                 </div>
               </button>
             </Link>
@@ -206,7 +205,7 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
                 <div
                   key={title}
                   onClick={toggleShopMenu}
-                  className={`text-gray-300 hover:bg-light block px-3 py-2 rounded-md text-base font-medium ${
+                  className={`text-gray-300 hover:bg-dark block px-3 py-2 rounded-md text-base font-medium ${
                     searchParams.get('category') === link ? 'bg-highlight' : ''
                   }`}
                 >
