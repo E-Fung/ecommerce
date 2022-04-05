@@ -129,6 +129,7 @@ export const createOrder = (currCart: CartItem[]) => async (dispatch: Dispatch) 
       currCart.forEach(async (product: CartItem) => {
         let params = { orderId: data.orderId, ...product, price: product.Product.price };
         promiseArray.push(axios.post('http://localhost:5000/orderedProducts', params));
+        promiseArray.push(axios.post('http://localhost:5000/productUpdate', params));
       });
     }
     await axios.delete('http://localhost:5000/wipeCart');

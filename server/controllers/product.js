@@ -65,4 +65,15 @@ module.exports = {
       })
       .catch((error) => res.status(400).send(error));
   },
+  update(req, res) {
+    return Product.findOne({ where: { productId: req.body.productId } })
+      .then(async (product) => {
+        if (product) {
+          product.totalPurchased += req.body.quantity;
+          await product.save();
+          return res.status(200).send(product);
+        }
+      })
+      .catch((error) => res.status(400).send(error));
+  },
 };

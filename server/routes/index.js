@@ -20,6 +20,7 @@ router.post('/product', productController.add);
 router.get('/product', productController.getProducts);
 router.get('/productByName', productController.getByName);
 router.get('/productById', productController.getById);
+router.post('/productUpdate', productController.update);
 
 //Cart
 router.post('/cart', productInCartController.add);
