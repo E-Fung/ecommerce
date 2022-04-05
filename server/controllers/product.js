@@ -28,7 +28,7 @@ module.exports = {
     if (category) {
       filters.category = ProductCategory(category);
     }
-    return Product.findAll({ where: filters })
+    return Product.findAll({ where: filters, order: [['productId', 'ASC']] })
       .then((products) => {
         if (!products) {
           return res.status(404).send({

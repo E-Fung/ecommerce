@@ -12,4 +12,5 @@ export const ActionTypes = {
 
   //Product
   FETCH_PRODUCTS: 'FETCH_PRODUCTS',
+  UPDATE_PRODUCT: 'UPDATE_PRODUCT',
 };

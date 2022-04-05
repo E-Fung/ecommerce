@@ -46,5 +46,6 @@ export interface Product {
 
 export interface ProductsAction {
   type: string;
-  products: Product[];
+  products?: Product[];
+  currCart?: CartItem[];
 }

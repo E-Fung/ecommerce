@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { add_To_Cart, fetch_Cart, drop_Cart, adjust_Cart_Item, remove_Cart_Item } from '../actions/cartActions';
 import { fetch_User, drop_User } from '../actions/userActions';
-import { fetch_Products } from '../actions/productsActions';
+import { fetch_Products, update_Product } from '../actions/productsActions';
 import { CartItem, Product } from '../../models/redux';
 import { Dispatch } from 'redux';
 
@@ -134,6 +134,7 @@ export const createOrder = (currCart: CartItem[]) => async (dispatch: Dispatch) 
     }
     await axios.delete('http://localhost:5000/wipeCart');
     await Promise.all(promiseArray);
+    dispatch(update_Product(currCart));
     dispatch(drop_Cart());
   } catch (error) {
     console.error(error);
