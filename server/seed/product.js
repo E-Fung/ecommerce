@@ -4,6 +4,7 @@ const db = require('../db');
 const productURL = 'https://fakestoreapi.com/products';
 
 const populateProducts = async () => {
+  db.sequelize.drop({ force: true });
   await db.sequelize.sync({ force: true });
   console.log('db synced');
   let tempProductList = await axios.get(productURL);
@@ -16,6 +17,7 @@ const populateProducts = async () => {
       category: product.category,
       description: product.description,
     };
+
     try {
       await addProduct(productParams);
     } catch {
@@ -25,7 +27,7 @@ const populateProducts = async () => {
 };
 
 const addProduct = async (data) => {
-  return axios.post('http://localhost:5000/product', data);
+  await axios.post('http://localhost:5000/product', data);
 };
 
 async function runSeed() {

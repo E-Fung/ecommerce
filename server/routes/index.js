@@ -8,12 +8,12 @@ const productInCartController = require('../controllers').productInCart;
 const userController = require('../controllers').user;
 
 //Order
-router.post('./order', orderController.add);
-router.get('./order', orderController.getByUser);
+router.post('/order', orderController.add);
+router.get('/order', orderController.getByUser);
 
 //OrderedProduct
-router.post('./orderedProducts', orderedProductController.add);
-router.post('./orderedProducts/:orderId', orderedProductController.getByOrder);
+router.post('/orderedProducts', orderedProductController.add);
+router.post('/orderedProducts/:orderId', orderedProductController.getByOrder);
 
 //Product
 router.post('/product', productController.add);
@@ -26,6 +26,7 @@ router.post('/cart', productInCartController.add);
 router.get('/cart', productInCartController.getById);
 router.post('/adjustCartItem', productInCartController.adjust);
 router.post('/deleteCartItem', productInCartController.delete);
+router.delete('/wipeCart', productInCartController.wipeCart);
 
 //User
 router.post('/user', userController.alterPhoto);

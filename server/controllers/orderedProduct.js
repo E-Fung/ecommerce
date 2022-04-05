@@ -2,7 +2,7 @@ const OrderedProduct = require('../db').OrderedProduct;
 
 module.exports = {
   add(req, res) {
-    return OrderedProduct.bulkCreate(req.body)
+    return OrderedProduct.create(req.body)
       .then((product) => res.status(201).send(product))
       .catch((error) => res.status(400).send(error));
   },

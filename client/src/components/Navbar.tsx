@@ -180,12 +180,24 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
                       {'Your Profile'}
                     </div>
                   </Link>
+                  <Link to='/orders'>
+                    <div
+                      onClick={toggleUserMenu}
+                      className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
+                      role='menuitem'
+                      tabIndex={-1}
+                      id={`user-menu-item-1`}
+                      key={'Past Orders'}
+                    >
+                      {'Past Orders'}
+                    </div>
+                  </Link>
                   <div
                     onClick={handleLogout}
                     className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
                     role='menuitem'
                     tabIndex={-1}
-                    id={`user-menu-item-1`}
+                    id={`user-menu-item-2`}
                     key={'Sign out'}
                   >
                     {'Sign out'}

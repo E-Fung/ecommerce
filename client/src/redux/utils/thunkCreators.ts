@@ -119,3 +119,22 @@ export const fetchProducts = (params: string) => async (dispatch: Dispatch) => {
     console.error(error);
   }
 };
+
+//ORDERS
+export const createOrder = (currCart: CartItem[]) => async (dispatch: Dispatch) => {
+  let promiseArray: any[] = [];
+  try {
+    if (currCart) {
+      const { data } = await axios.post('http://localhost:5000/order');
+      currCart.forEach(async (product: CartItem) => {
+        let params = { orderId: data.orderId, ...product, price: product.Product.price };
+        promiseArray.push(axios.post('http://localhost:5000/orderedProducts', params));
+      });
+    }
+    await axios.delete('http://localhost:5000/wipeCart');
+    await Promise.all(promiseArray);
+    dispatch(drop_Cart());
+  } catch (error) {
+    console.error(error);
+  }
+};
