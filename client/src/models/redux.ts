@@ -49,3 +49,20 @@ export interface ProductsAction {
   products?: Product[];
   currCart?: CartItem[];
 }
+
+//Prder
+export interface Order {
+  OrderedProducts: OrderedProducts[];
+  createdAt: string;
+  orderId: number;
+  userId: number;
+}
+
+export interface OrderedProducts {
+  orderId: number;
+  orderedProductId: number;
+  price: number;
+  productId: number;
+  quantity: number;
+  Product: Product;
+}

@@ -10,7 +10,7 @@ import ErrorPage from './ErrorPage';
 import ProductPage from './ProductPage';
 import CartPage from './CartPage';
 import LoginPage from './LoginPage';
-import ProfilePage from './ProductPage';
+import ProfilePage from './ProfilePage';
 import OrderPage from './OrderPage';
 
 type Props = { user: User; fetchUser: any; fetchCart: any };

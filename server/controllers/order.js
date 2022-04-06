@@ -1,5 +1,6 @@
 const Order = require('../db').Order;
 const OrderedProduct = require('../db').OrderedProduct;
+const Product = require('../db').Product;
 
 module.exports = {
   add(req, res) {
@@ -10,9 +11,13 @@ module.exports = {
   getByUser(req, res) {
     return Order.findAll({
       where: {
-        userId: req.body.userId,
+        userId: req.user.userId,
       },
       order: [['createdAt', 'DESC']],
+      include: {
+        model: OrderedProduct,
+        include: Product,
+      },
     })
       .then((orders) => {
         if (!orders) {
