@@ -112,7 +112,7 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
                 {user.email && (
                   <button
                     type='button'
-                    className='bg-white flex justify-center content-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white overflow-clip'
+                    className='bg-white flex justify-center content-center text-sm rounded-full overflow-clip'
                     id='user-menu-button'
                     aria-expanded='false'
                     aria-haspopup='true'
@@ -120,7 +120,7 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
                   >
                     <span className='sr-only'>Open user menu</span>
                     {user.photoUrl ? (
-                      <div className='h-10 w-10 flex justify-center'>
+                      <div className='h-10 w-10 flex items-center justify-center'>
                         <img src={user.photoUrl} alt='' className='max-w-full max-h-full' />
                       </div>
                     ) : (
