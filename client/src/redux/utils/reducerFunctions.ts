@@ -1,4 +1,17 @@
-import { CartItem } from '../../models/redux';
+import { CartItem, Product } from '../../models/redux';
+
+//Product
+export const updateProduct = (state: Product[], payload: CartItem[]) => {
+  return state.map((product: Product, index) => {
+    let found = payload.find((item) => item.productId === product.productId);
+    if (found) {
+      const productCopy = { ...product };
+      productCopy.totalPurchased += found.quantity;
+      return productCopy;
+    }
+    return product;
+  });
+};
 
 //Cart
 export const addItemToCart = (state: CartItem[], payload: CartItem) => {

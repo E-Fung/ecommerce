@@ -31,6 +31,7 @@ export interface UserAction {
   type: string;
   user?: User;
   isFetching?: boolean;
+  photoUrl?: string;
 }
 
 // Product
@@ -46,5 +47,23 @@ export interface Product {
 
 export interface ProductsAction {
   type: string;
-  products: Product[];
+  products?: Product[];
+  currCart?: CartItem[];
+}
+
+//Prder
+export interface Order {
+  OrderedProducts: OrderedProducts[];
+  createdAt: string;
+  orderId: number;
+  userId: number;
+}
+
+export interface OrderedProducts {
+  orderId: number;
+  orderedProductId: number;
+  price: number;
+  productId: number;
+  quantity: number;
+  Product: Product;
 }

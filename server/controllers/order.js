@@ -1,17 +1,23 @@
 const Order = require('../db').Order;
+const OrderedProduct = require('../db').OrderedProduct;
+const Product = require('../db').Product;
 
 module.exports = {
   add(req, res) {
-    return Product.create(req.body)
-      .then((product) => res.status(201).send(product))
+    return Order.create({ userId: req.user.userId })
+      .then((order) => res.status(201).send(order))
       .catch((error) => res.status(400).send(error));
   },
   getByUser(req, res) {
     return Order.findAll({
       where: {
-        userId: req.body.userId,
+        userId: req.user.userId,
       },
       order: [['createdAt', 'DESC']],
+      include: {
+        model: OrderedProduct,
+        include: Product,
+      },
     })
       .then((orders) => {
         if (!orders) {

@@ -70,7 +70,7 @@ module.exports = {
   alterPhoto(req, res) {
     return User.findOne({
       where: {
-        email: req.body.email,
+        userId: req.user.userId,
       },
     })
       .then((user) => {

@@ -10,6 +10,8 @@ import ErrorPage from './ErrorPage';
 import ProductPage from './ProductPage';
 import CartPage from './CartPage';
 import LoginPage from './LoginPage';
+import ProfilePage from './ProfilePage';
+import OrderPage from './OrderPage';
 
 type Props = { user: User; fetchUser: any; fetchCart: any };
 
@@ -47,6 +49,8 @@ const AppRoutes: React.FC<Props> = ({ user, fetchUser, fetchCart }) => {
           <Route path='/product' element={<ProductContainer />} />
           <Route path='/product/:productName' element={<ProductPage />} />
           <Route path='/cart' element={<CartPage />} />
+          <Route path='/profile' element={<ProfilePage />} />
+          <Route path='/orders' element={<OrderPage />} />
         </Route>
         <Route element={<WithoutNav />}>
           <Route path='/register' element={<Register />} />

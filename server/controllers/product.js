@@ -28,7 +28,7 @@ module.exports = {
     if (category) {
       filters.category = ProductCategory(category);
     }
-    return Product.findAll({ where: filters })
+    return Product.findAll({ where: filters, order: [['productId', 'ASC']] })
       .then((products) => {
         if (!products) {
           return res.status(404).send({
@@ -62,6 +62,17 @@ module.exports = {
           });
         }
         return res.status(200).send(product);
+      })
+      .catch((error) => res.status(400).send(error));
+  },
+  update(req, res) {
+    return Product.findOne({ where: { productId: req.body.productId } })
+      .then(async (product) => {
+        if (product) {
+          product.totalPurchased += req.body.quantity;
+          await product.save();
+          return res.status(200).send(product);
+        }
       })
       .catch((error) => res.status(400).send(error));
   },

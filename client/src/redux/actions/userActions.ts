@@ -13,3 +13,10 @@ export const drop_User = () => {
     type: ActionTypes.DROP_USER,
   };
 };
+
+export const update_User = (photoUrl: string) => {
+  return {
+    type: ActionTypes.UPDATE_USER,
+    photoUrl,
+  };
+};

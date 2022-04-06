@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { add_To_Cart, fetch_Cart, drop_Cart, adjust_Cart_Item, remove_Cart_Item } from '../actions/cartActions';
-import { fetch_User, drop_User } from '../actions/userActions';
-import { fetch_Products } from '../actions/productsActions';
+import { fetch_User, drop_User, update_User } from '../actions/userActions';
+import { fetch_Products, update_Product } from '../actions/productsActions';
 import { CartItem, Product } from '../../models/redux';
 import { Dispatch } from 'redux';
 
@@ -23,7 +23,7 @@ export const fetchUser = () => async (dispatch: Dispatch) => {
   }
 };
 
-export const register = (credentials: { name: string; email: string; password: string }) => async (dispatch: any) => {
+export const register = (credentials: { name: string; email: string; password: string }) => async (dispatch: Dispatch) => {
   try {
     const { data } = await axios.post('http://localhost:5000/auth/register', credentials);
     await localStorage.setItem('messenger-token', data.token);
@@ -33,7 +33,7 @@ export const register = (credentials: { name: string; email: string; password: s
   }
 };
 
-export const login = (credentials: { email: string; password: string }) => async (dispatch: any) => {
+export const login = (credentials: { email: string; password: string }) => async (dispatch: Dispatch) => {
   try {
     const { data } = await axios.post('http://localhost:5000/auth/login', credentials);
     await localStorage.setItem('messenger-token', data.token);
@@ -43,12 +43,21 @@ export const login = (credentials: { email: string; password: string }) => async
   }
 };
 
-export const logout = () => async (dispatch: any) => {
+export const logout = () => async (dispatch: Dispatch) => {
   try {
     await axios.delete('http://localhost:5000/auth/logout');
     await localStorage.removeItem('messenger-token');
     dispatch(drop_User());
     dispatch(drop_Cart());
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const updateUser = (photoUrl: string) => async (dispatch: Dispatch) => {
+  try {
+    await axios.post('http://localhost:5000/user', { photoUrl: photoUrl });
+    dispatch(update_User(photoUrl));
   } catch (error) {
     console.error(error);
   }
@@ -115,6 +124,27 @@ export const fetchProducts = (params: string) => async (dispatch: Dispatch) => {
   try {
     let { data }: { data: Product[] } = await axios.get(`http://localhost:5000/product?category=${params}`);
     dispatch(fetch_Products(data));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+//ORDERS
+export const createOrder = (currCart: CartItem[]) => async (dispatch: Dispatch) => {
+  let promiseArray: any[] = [];
+  try {
+    if (currCart) {
+      const { data } = await axios.post('http://localhost:5000/order');
+      currCart.forEach(async (product: CartItem) => {
+        let params = { orderId: data.orderId, ...product, price: product.Product.price };
+        promiseArray.push(axios.post('http://localhost:5000/orderedProducts', params));
+        promiseArray.push(axios.post('http://localhost:5000/productUpdate', params));
+      });
+    }
+    await axios.delete('http://localhost:5000/wipeCart');
+    await Promise.all(promiseArray);
+    dispatch(update_Product(currCart));
+    dispatch(drop_Cart());
   } catch (error) {
     console.error(error);
   }

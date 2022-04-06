@@ -9,6 +9,8 @@ export const userReducer = (state = initialState, action: UserAction) => {
       return action.user;
     case ActionTypes.DROP_USER:
       return {};
+    case ActionTypes.UPDATE_USER:
+      return { ...state, photoUrl: action.photoUrl };
     default:
       return state;
   }

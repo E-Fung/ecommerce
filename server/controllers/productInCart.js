@@ -3,6 +3,17 @@ const Product = require('../db').Product;
 const { updateOrCreate } = require('./utils');
 
 module.exports = {
+  wipeCart(req, res) {
+    return ProductInCart.destroy({
+      where: {
+        userId: req.user.userId,
+      },
+    })
+      .then(async () => {
+        res.sendStatus(204);
+      })
+      .catch((error) => res.status(400).send(error));
+  },
   add(req, res) {
     //Good, only used for integrating cart prior to register/login
     const newItem = { userId: req.user.userId, productId: req.body.productId, quantity: req.body.quantity };
