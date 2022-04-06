@@ -9,6 +9,7 @@ export const ActionTypes = {
   //User
   FETCH_USER: 'FETCH_USER',
   DROP_USER: 'DROP_USER',
+  UPDATE_USER: 'UPDATE_USER',
 
   //Product
   FETCH_PRODUCTS: 'FETCH_PRODUCTS',

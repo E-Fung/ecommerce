@@ -31,6 +31,7 @@ export interface UserAction {
   type: string;
   user?: User;
   isFetching?: boolean;
+  photoUrl?: string;
 }
 
 // Product
