@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { User, State, CartItem } from '../models/redux';
 import { logout } from '../redux/utils/thunkCreators';
 import { logo, emptyUser } from '../assets';
+import OutsiderAlerter from './subcomponents/OutsiderAlerter';
 //mx-auto - centers container
 //max-w-7xl - constrains the container
 
@@ -25,17 +26,35 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
       ['electronics', 'Electronics'],
     ];
   }, []);
+
   const toggleRegLogMenu = () => {
     setRegLogMenu(!regLogMenu);
   };
-  const toggleUserMenu = () => {
-    setUserMenu(!userMenu);
+  const toggleUserMenu = (event: any | null) => {
+    console.log(event);
+    if (event) {
+      if (userMenu) {
+        setUserMenu(false);
+      } else {
+        setUserMenu(!userMenu);
+      }
+    }
   };
   const toggleShopMenu = () => {
     setShopMenu(!shopMenu);
   };
+  const closeShopMenu = () => {
+    setShopMenu(false);
+  };
+  const closeRegLogMenu = () => {
+    setRegLogMenu(false);
+  };
+  const closeUserMenu = (event: any) => {
+    console.log('closing');
+    // setUserMenu(false);
+  };
   const handleLogout = async (event: any) => {
-    toggleUserMenu();
+    toggleUserMenu(null);
     event.preventDefault();
     await logout();
     navigate('/product');
@@ -132,6 +151,44 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
                 )}
                 {!user.email && <img className='cursor-pointer' onClick={toggleRegLogMenu} src={emptyUser} alt='' />}
                 {regLogMenu && (
+                  <OutsiderAlerter onClickEvent={closeRegLogMenu}>
+                    <div
+                      className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'
+                      role='menu'
+                      aria-orientation='vertical'
+                      aria-labelledby='user-menu-button'
+                      tabIndex={-1}
+                    >
+                      <Link to='/register'>
+                        <div
+                          onClick={toggleRegLogMenu}
+                          className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
+                          role='menuitem'
+                          tabIndex={-1}
+                          id={`user-menu-item-0`}
+                          key={'Your Profile'}
+                        >
+                          Register
+                        </div>
+                      </Link>
+                      <Link to='/login'>
+                        <div
+                          onClick={toggleRegLogMenu}
+                          className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
+                          role='menuitem'
+                          tabIndex={-1}
+                          id={`user-menu-item-1`}
+                          key={'Sign out'}
+                        >
+                          Login
+                        </div>
+                      </Link>
+                    </div>
+                  </OutsiderAlerter>
+                )}
+              </div>
+              {userMenu && (
+                <OutsiderAlerter onClickEvent={toggleUserMenu}>
                   <div
                     className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'
                     role='menu'
@@ -139,100 +196,67 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
                     aria-labelledby='user-menu-button'
                     tabIndex={-1}
                   >
-                    <Link to='/register'>
+                    <Link to='/profile'>
                       <div
-                        onClick={toggleRegLogMenu}
+                        onClick={toggleUserMenu}
                         className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
                         role='menuitem'
                         tabIndex={-1}
                         id={`user-menu-item-0`}
                         key={'Your Profile'}
                       >
-                        Register
+                        {'Your Profile'}
                       </div>
                     </Link>
-                    <Link to='/login'>
+                    <Link to='/orders'>
                       <div
-                        onClick={toggleRegLogMenu}
+                        onClick={toggleUserMenu}
                         className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
                         role='menuitem'
                         tabIndex={-1}
                         id={`user-menu-item-1`}
-                        key={'Sign out'}
+                        key={'Past Orders'}
                       >
-                        Login
+                        {'Past Orders'}
                       </div>
                     </Link>
-                  </div>
-                )}
-              </div>
-              {userMenu && (
-                <div
-                  className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'
-                  role='menu'
-                  aria-orientation='vertical'
-                  aria-labelledby='user-menu-button'
-                  tabIndex={-1}
-                >
-                  <Link to='/profile'>
                     <div
-                      onClick={toggleUserMenu}
+                      onClick={handleLogout}
                       className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
                       role='menuitem'
                       tabIndex={-1}
-                      id={`user-menu-item-0`}
-                      key={'Your Profile'}
+                      id={`user-menu-item-2`}
+                      key={'Sign out'}
                     >
-                      {'Your Profile'}
+                      {'Sign out'}
                     </div>
-                  </Link>
-                  <Link to='/orders'>
-                    <div
-                      onClick={toggleUserMenu}
-                      className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
-                      role='menuitem'
-                      tabIndex={-1}
-                      id={`user-menu-item-1`}
-                      key={'Past Orders'}
-                    >
-                      {'Past Orders'}
-                    </div>
-                  </Link>
-                  <div
-                    onClick={handleLogout}
-                    className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
-                    role='menuitem'
-                    tabIndex={-1}
-                    id={`user-menu-item-2`}
-                    key={'Sign out'}
-                  >
-                    {'Sign out'}
                   </div>
-                </div>
+                </OutsiderAlerter>
               )}
             </div>
           </div>
         </div>
       </div>
       {shopMenu && (
-        // user menu (when logged in)
-        <div className='sm:hidden' id='mobile-menu'>
-          <div className='px-2 pt-2 pb-3 space-y-1'>
-            {menuItems.map(([link, title]) => (
-              <Link to={`/product?category=${link}`} key={title}>
-                <div
-                  key={title}
-                  onClick={toggleShopMenu}
-                  className={`text-gray-300 hover:bg-dark block px-3 py-2 rounded-md text-base font-medium ${
-                    searchParams.get('category') === link ? 'bg-highlight' : ''
-                  }`}
-                >
-                  {title}
-                </div>
-              </Link>
-            ))}
+        <OutsiderAlerter onClickEvent={closeShopMenu}>
+          <div className='sm:hidden' id='mobile-menu'>
+            <div className='px-2 pt-2 pb-3 space-y-1'>
+              {menuItems.map(([link, title]) => (
+                <Link to={`/product?category=${link}`} key={title}>
+                  <div
+                    key={title}
+                    onClick={toggleShopMenu}
+                    className={`text-gray-300 hover:bg-dark block px-3 py-2 rounded-md text-base font-medium ${
+                      searchParams.get('category') === link ? 'bg-highlight' : ''
+                    }`}
+                  >
+                    {title}
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
+        </OutsiderAlerter>
       )}
     </nav>
   );
