@@ -13,15 +13,14 @@ type Props = { user: User; logout: any; cart: CartItem[] };
 
 const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
   const regLogRef: any = useRef();
+  const shopRef: any = useRef();
+  const menuRef: any = useRef();
+
   const [userMenu, setUserMenu] = useState<boolean>(false);
   const [shopMenu, setShopMenu] = useState<boolean>(false);
   const [regLogMenu, setRegLogMenu] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log(regLogRef);
-  }, []);
 
   const menuItems = useMemo(() => {
     return [
@@ -35,31 +34,15 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
   const toggleRegLogMenu = () => {
     setRegLogMenu(!regLogMenu);
   };
-  const toggleUserMenu = (event: any | null) => {
-    console.log(event);
-    if (event) {
-      if (userMenu) {
-        setUserMenu(false);
-      } else {
-        setUserMenu(!userMenu);
-      }
-    }
+  const toggleUserMenu = () => {
+    setUserMenu(!userMenu);
   };
   const toggleShopMenu = () => {
     setShopMenu(!shopMenu);
   };
-  const closeShopMenu = () => {
-    setShopMenu(false);
-  };
-  const closeRegLogMenu = () => {
-    setRegLogMenu(false);
-  };
-  const closeUserMenu = (event: any) => {
-    console.log('closing');
-    // setUserMenu(false);
-  };
+
   const handleLogout = async (event: any) => {
-    toggleUserMenu(null);
+    toggleUserMenu();
     event.preventDefault();
     await logout();
     navigate('/product');
@@ -79,6 +62,7 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
               aria-controls='mobile-menu'
               aria-expanded='false'
               onClick={toggleShopMenu}
+              ref={shopRef}
             >
               <span className='sr-only'>Open main menu</span>
               <svg className='block h-6 w-6' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' aria-hidden='true'>
@@ -141,6 +125,7 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
                     aria-expanded='false'
                     aria-haspopup='true'
                     onClick={toggleUserMenu}
+                    ref={menuRef}
                   >
                     <span className='sr-only'>Open user menu</span>
                     {user.photoUrl ? (
@@ -164,104 +149,104 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
                       aria-labelledby='user-menu-button'
                       tabIndex={-1}
                     >
-                      {/* <Link to='/register'> */}
+                      <Link to='/register'>
+                        <div
+                          onClick={toggleRegLogMenu}
+                          className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
+                          role='menuitem'
+                          tabIndex={-1}
+                          id={`user-menu-item-0`}
+                          key={'Your Profile'}
+                        >
+                          Register
+                        </div>
+                      </Link>
+                      <Link to='/login'>
+                        <div
+                          onClick={toggleRegLogMenu}
+                          className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
+                          role='menuitem'
+                          tabIndex={-1}
+                          id={`user-menu-item-1`}
+                          key={'Sign out'}
+                        >
+                          Login
+                        </div>
+                      </Link>
+                    </div>
+                  </OutsiderAlerter>
+                )}
+              </div>
+              {userMenu && (
+                <OutsiderAlerter onClickEvent={toggleUserMenu} theRef={menuRef}>
+                  <div
+                    className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'
+                    role='menu'
+                    aria-orientation='vertical'
+                    aria-labelledby='user-menu-button'
+                    tabIndex={-1}
+                  >
+                    <Link to='/profile'>
                       <div
-                        onClick={toggleRegLogMenu}
+                        onClick={toggleUserMenu}
                         className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
                         role='menuitem'
                         tabIndex={-1}
                         id={`user-menu-item-0`}
                         key={'Your Profile'}
                       >
-                        Register
+                        {'Your Profile'}
                       </div>
-                      {/* </Link>
-                      <Link to='/login'> */}
+                    </Link>
+                    <Link to='/orders'>
                       <div
-                        onClick={toggleRegLogMenu}
+                        onClick={toggleUserMenu}
                         className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
                         role='menuitem'
                         tabIndex={-1}
                         id={`user-menu-item-1`}
-                        key={'Sign out'}
+                        key={'Past Orders'}
                       >
-                        Login
+                        {'Past Orders'}
                       </div>
-                      {/* </Link> */}
-                    </div>
-                  </OutsiderAlerter>
-                )}
-              </div>
-              {userMenu && (
-                // <OutsiderAlerter onClickEvent={toggleUserMenu}>
-                <div
-                  className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'
-                  role='menu'
-                  aria-orientation='vertical'
-                  aria-labelledby='user-menu-button'
-                  tabIndex={-1}
-                >
-                  <Link to='/profile'>
+                    </Link>
                     <div
-                      onClick={toggleUserMenu}
+                      onClick={handleLogout}
                       className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
                       role='menuitem'
                       tabIndex={-1}
-                      id={`user-menu-item-0`}
-                      key={'Your Profile'}
+                      id={`user-menu-item-2`}
+                      key={'Sign out'}
                     >
-                      {'Your Profile'}
+                      {'Sign out'}
                     </div>
-                  </Link>
-                  <Link to='/orders'>
-                    <div
-                      onClick={toggleUserMenu}
-                      className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
-                      role='menuitem'
-                      tabIndex={-1}
-                      id={`user-menu-item-1`}
-                      key={'Past Orders'}
-                    >
-                      {'Past Orders'}
-                    </div>
-                  </Link>
-                  <div
-                    onClick={handleLogout}
-                    className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
-                    role='menuitem'
-                    tabIndex={-1}
-                    id={`user-menu-item-2`}
-                    key={'Sign out'}
-                  >
-                    {'Sign out'}
                   </div>
-                </div>
-                // </OutsiderAlerter>
+                </OutsiderAlerter>
               )}
             </div>
           </div>
         </div>
       </div>
       {shopMenu && (
-        // <OutsiderAlerter onClickEvent={closeShopMenu}>
-        <div className='sm:hidden' id='mobile-menu'>
-          <div className='px-2 pt-2 pb-3 space-y-1'>
-            {menuItems.map(([link, title]) => (
-              <Link to={`/product?category=${link}`} key={title}>
-                <div
-                  key={title}
-                  onClick={toggleShopMenu}
-                  className={`text-gray-300 hover:bg-dark block px-3 py-2 rounded-md text-base font-medium ${
-                    searchParams.get('category') === link ? 'bg-highlight' : ''
-                  }`}
-                >
-                  {title}
-                </div>
-              </Link>
-            ))}
+        <OutsiderAlerter onClickEvent={toggleShopMenu} theRef={shopRef}>
+          <div className='sm:hidden' id='mobile-menu'>
+            <div className='px-2 pt-2 pb-3 space-y-1'>
+              {menuItems.map(([link, title]) => (
+                <Link to={`/product?category=${link}`} key={title}>
+                  <div
+                    key={title}
+                    onClick={toggleShopMenu}
+                    className={`text-gray-300 hover:bg-dark block px-3 py-2 rounded-md text-base font-medium ${
+                      searchParams.get('category') === link ? 'bg-highlight' : ''
+                    }`}
+                  >
+                    {title}
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-        // </OutsiderAlerter>
+        </OutsiderAlerter>
       )}
     </nav>
   );

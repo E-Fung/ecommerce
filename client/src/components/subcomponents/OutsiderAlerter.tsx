@@ -5,10 +5,10 @@ const useOutsideAlerter = (ref: any, theRef: any, onClickEvent: any) => {
   useEffect(() => {
     function handleClickOutside(event: any) {
       if (ref.current && !ref.current.contains(event.target) && !theRef.current.contains(event.target)) {
-        // console.log('outside');
+        console.log('outside');
         onClickEvent();
       } else {
-        // console.log('inside');
+        console.log('inside');
       }
     }
     // Bind the event listener
