@@ -1,11 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-const useOutsideAlerter = (ref: any, onClickEvent: any) => {
+const useOutsideAlerter = (ref: any, theRef: any, onClickEvent: any) => {
   useEffect(() => {
     function handleClickOutside(event: any) {
-      if (ref.current && !ref.current.contains(event.target)) {
-        onClickEvent(event);
+      if (ref.current && !ref.current.contains(event.target) && !theRef.current.contains(event.target)) {
+        console.log('outside');
+        onClickEvent();
+      } else {
+        console.log('inside');
       }
     }
     // Bind the event listener
@@ -17,10 +20,10 @@ const useOutsideAlerter = (ref: any, onClickEvent: any) => {
   }, [ref]);
 };
 
-type Props = { children: any; onClickEvent: any };
-const OutsideAlerter: React.FC<Props> = ({ children, onClickEvent }) => {
-  const wrapperRef = useRef(null);
-  useOutsideAlerter(wrapperRef, onClickEvent);
+type Props = { children: any; onClickEvent: any; theRef: any };
+const OutsideAlerter: React.FC<Props> = ({ children, onClickEvent, theRef }) => {
+  const wrapperRef = useRef(children);
+  useOutsideAlerter(wrapperRef, theRef, onClickEvent);
 
   return <div ref={wrapperRef}>{children}</div>;
 };

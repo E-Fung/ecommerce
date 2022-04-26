@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { User, State, CartItem } from '../models/redux';
@@ -12,6 +12,10 @@ import OutsiderAlerter from './subcomponents/OutsiderAlerter';
 type Props = { user: User; logout: any; cart: CartItem[] };
 
 const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
+  const regLogRef: any = useRef();
+  const shopRef: any = useRef();
+  const menuRef: any = useRef();
+
   const [userMenu, setUserMenu] = useState<boolean>(false);
   const [shopMenu, setShopMenu] = useState<boolean>(false);
   const [regLogMenu, setRegLogMenu] = useState<boolean>(false);
@@ -30,31 +34,15 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
   const toggleRegLogMenu = () => {
     setRegLogMenu(!regLogMenu);
   };
-  const toggleUserMenu = (event: any | null) => {
-    console.log(event);
-    if (event) {
-      if (userMenu) {
-        setUserMenu(false);
-      } else {
-        setUserMenu(!userMenu);
-      }
-    }
+  const toggleUserMenu = () => {
+    setUserMenu(!userMenu);
   };
   const toggleShopMenu = () => {
     setShopMenu(!shopMenu);
   };
-  const closeShopMenu = () => {
-    setShopMenu(false);
-  };
-  const closeRegLogMenu = () => {
-    setRegLogMenu(false);
-  };
-  const closeUserMenu = (event: any) => {
-    console.log('closing');
-    // setUserMenu(false);
-  };
+
   const handleLogout = async (event: any) => {
-    toggleUserMenu(null);
+    toggleUserMenu();
     event.preventDefault();
     await logout();
     navigate('/product');
@@ -74,6 +62,7 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
               aria-controls='mobile-menu'
               aria-expanded='false'
               onClick={toggleShopMenu}
+              ref={shopRef}
             >
               <span className='sr-only'>Open main menu</span>
               <svg className='block h-6 w-6' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' aria-hidden='true'>
@@ -136,6 +125,7 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
                     aria-expanded='false'
                     aria-haspopup='true'
                     onClick={toggleUserMenu}
+                    ref={menuRef}
                   >
                     <span className='sr-only'>Open user menu</span>
                     {user.photoUrl ? (
@@ -149,9 +139,9 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
                     )}
                   </button>
                 )}
-                {!user.email && <img className='cursor-pointer' onClick={toggleRegLogMenu} src={emptyUser} alt='' />}
+                {!user.email && <img ref={regLogRef} className='cursor-pointer' onClick={toggleRegLogMenu} src={emptyUser} alt='' />}
                 {regLogMenu && (
-                  <OutsiderAlerter onClickEvent={closeRegLogMenu}>
+                  <OutsiderAlerter onClickEvent={toggleRegLogMenu} theRef={regLogRef}>
                     <div
                       className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'
                       role='menu'
@@ -188,7 +178,7 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
                 )}
               </div>
               {userMenu && (
-                <OutsiderAlerter onClickEvent={toggleUserMenu}>
+                <OutsiderAlerter onClickEvent={toggleUserMenu} theRef={menuRef}>
                   <div
                     className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'
                     role='menu'
@@ -238,7 +228,7 @@ const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
         </div>
       </div>
       {shopMenu && (
-        <OutsiderAlerter onClickEvent={closeShopMenu}>
+        <OutsiderAlerter onClickEvent={toggleShopMenu} theRef={shopRef}>
           <div className='sm:hidden' id='mobile-menu'>
             <div className='px-2 pt-2 pb-3 space-y-1'>
               {menuItems.map(([link, title]) => (
