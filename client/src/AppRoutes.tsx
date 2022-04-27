@@ -5,6 +5,7 @@ import { Routes, Route, Outlet, Navigate } from 'react-router-dom';
 import { User, State, CartItem } from '../src/models/redux';
 import Register from './Register';
 import Navbar from './components/Navbar';
+import Topbar from './components/Topbar';
 import ProductContainer from './ProductsContainer';
 import ErrorPage from './ErrorPage';
 import ProductPage from './ProductPage';
@@ -31,8 +32,9 @@ const AppRoutes: React.FC<Props> = ({ user, fetchUser, fetchCart }) => {
   const WithNav = () => {
     return (
       <>
-        <Navbar />
+        <Topbar />
         <Outlet />
+        <Navbar />
       </>
     );
   };
@@ -42,7 +44,7 @@ const AppRoutes: React.FC<Props> = ({ user, fetchUser, fetchCart }) => {
   };
 
   return (
-    <>
+    <div className='min-h-screen min-w-screen'>
       <Routes>
         <Route element={<WithNav />}>
           <Route path='/' element={<Navigate to={'/product'} replace />} />
@@ -58,7 +60,7 @@ const AppRoutes: React.FC<Props> = ({ user, fetchUser, fetchCart }) => {
         </Route>
         <Route path='*' element={<ErrorPage />} />
       </Routes>
-    </>
+    </div>
   );
 };
 

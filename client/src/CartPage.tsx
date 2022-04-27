@@ -39,7 +39,7 @@ const CartPage: React.FC<Props> = ({ cart, user, createOrder }) => {
   }
 
   return (
-    <div className='justify-center flex flex-wrap max-w-7xl mx-auto p-4 sm:px-6 lg:px-8 text-black'>
+    <div className='justify-center flex flex-wrap min-h-screen max-w-7xl mx-auto p-4 sm:px-6 lg:px-8 text-black'>
       <div className='bg-dark w-full space-y-4'>
         <div className='text-black bg-white text-xl pl-4 pt-4 font-semibold border-4 rounded-lg'>Shopping Cart</div>
         <div className='flex'>
