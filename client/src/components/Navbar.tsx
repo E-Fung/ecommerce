@@ -13,7 +13,7 @@ const Navbar: React.FC<Props> = ({ cart }) => {
   const sum = cart.reduce((partialSum, currentValue) => partialSum + currentValue.quantity, 0);
 
   return (
-    <nav className='bg-white px-4 pt-4 pb-2 sticky bottom-0 w-full rounded-t-3xl flex justify-between shadow-inner'>
+    <nav style={{ boxShadow: '0px 6px 10px 0px #393F48' }} className='bg-white px-4 pt-4 pb-2 sticky bottom-0 w-full rounded-t-3xl flex justify-between'>
       <Link to={'/product'}>
         <div className={`flex flex-col ${location.pathname === '/product' ? 'fill-primary' : 'fill-secondaryDeep'} space-y-2 hover:fill-primary`}>
           <svg width='21' height='18' viewBox='0 0 21 18' xmlns='http://www.w3.org/2000/svg'>

@@ -44,7 +44,7 @@ const AppRoutes: React.FC<Props> = ({ user, fetchUser, fetchCart }) => {
   };
 
   return (
-    <div className='min-h-screen min-w-screen'>
+    <div className='min-h-screen min-w-screen flex flex-col'>
       <Routes>
         <Route element={<WithNav />}>
           <Route path='/' element={<Navigate to={'/product'} replace />} />
