@@ -32,15 +32,26 @@ const CartPage: React.FC<Props> = ({ cart, user, createOrder }) => {
 
   if (!cart.length) {
     return (
-      <div className='w-full h-full py-80 flex justify-center'>
-        <div className='text-5xl'>Your cart is empty</div>
+      <div className='w-full h-full grow flex justify-center table'>
+        <div className='text-5xl text-black text-center table-cell align-middle'>Your cart is empty</div>
       </div>
     );
   }
 
   return (
-    <div className='justify-center flex flex-wrap min-h-screen max-w-7xl mx-auto p-4 sm:px-6 lg:px-8 text-black'>
-      <div className='bg-dark w-full space-y-4'>
+    <div className='justify-center flex flex-wrap grow text-black p-4'>
+      <div className='space-y-4'>
+        {cart.map((product: CartItem, index: number) => (
+          <div key={product.productId}>
+            <CartCard product={product.Product} quantity={product.quantity} key={product.productId} />
+          </div>
+        ))}
+        {/* <div className='flex bg-white justify-end p-4 space-x-2 border-4 text-black rounded-lg'>
+          <div className='font-semibold'>{getTotalItems()} </div>
+          <div className='font-bold border-2'>${getTotalCost()}</div>
+        </div> */}
+      </div>
+      {/* <div className='bg-dark w-full space-y-4'>
         <div className='text-black bg-white text-xl pl-4 pt-4 font-semibold border-4 rounded-lg'>Shopping Cart</div>
         <div className='flex'>
           <div className='w-9/12 space-y-4'>
@@ -72,7 +83,7 @@ const CartPage: React.FC<Props> = ({ cart, user, createOrder }) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

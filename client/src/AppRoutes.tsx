@@ -59,14 +59,7 @@ const AppRoutes: React.FC<Props> = ({ user, fetchUser, fetchCart, dropDetail }) 
           <Route path='/product' element={<ProductContainer />} />
           <Route path='/product/:productName' element={<ProductPage />} />
           <Route path='/cart' element={<CartPage />} />
-          <Route
-            path='/profile'
-            element={
-              <>
-                <ProfilePage />
-              </>
-            }
-          />
+          <Route path='/profile' element={<ProfilePage />} />
           <Route path='/orders' element={<OrderPage />} />
         </Route>
         <Route element={<WithoutNav />}>
