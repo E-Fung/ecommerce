@@ -2,6 +2,7 @@ export interface State {
   user: User;
   cart: CartItem[];
   products: Product[];
+  detail: Product;
 }
 
 //Cart

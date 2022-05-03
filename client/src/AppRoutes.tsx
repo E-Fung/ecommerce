@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { fetchUser, fetchCart } from './redux/utils/thunkCreators';
-import { Routes, Route, Outlet, Navigate } from 'react-router-dom';
+import { fetchUser, fetchCart, dropDetail } from './redux/utils/thunkCreators';
+import { Routes, Route, Outlet, Navigate, useLocation } from 'react-router-dom';
 import { User, State, CartItem } from '../src/models/redux';
 import Register from './Register';
 import Navbar from './components/Navbar';
@@ -13,13 +13,21 @@ import CartPage from './CartPage';
 import LoginPage from './LoginPage';
 import ProfilePage from './ProfilePage';
 import OrderPage from './OrderPage';
+import CartNavbar from './components/subcomponents/CartNavbar';
 
-type Props = { user: User; fetchUser: any; fetchCart: any };
+type Props = { user: User; fetchUser: any; fetchCart: any; dropDetail: any };
 
-const AppRoutes: React.FC<Props> = ({ user, fetchUser, fetchCart }) => {
+const AppRoutes: React.FC<Props> = ({ user, fetchUser, fetchCart, dropDetail }) => {
+  const location = useLocation();
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
+
+  useEffect(() => {
+    if (!location.pathname.includes('/product/')) {
+      dropDetail();
+    }
+  }, [location]);
 
   useEffect(() => {
     if (user.email) {
@@ -51,7 +59,14 @@ const AppRoutes: React.FC<Props> = ({ user, fetchUser, fetchCart }) => {
           <Route path='/product' element={<ProductContainer />} />
           <Route path='/product/:productName' element={<ProductPage />} />
           <Route path='/cart' element={<CartPage />} />
-          <Route path='/profile' element={<ProfilePage />} />
+          <Route
+            path='/profile'
+            element={
+              <>
+                <ProfilePage />
+              </>
+            }
+          />
           <Route path='/orders' element={<OrderPage />} />
         </Route>
         <Route element={<WithoutNav />}>
@@ -77,6 +92,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     fetchCart(currCart: CartItem[]) {
       dispatch(fetchCart(currCart));
+    },
+    dropDetail() {
+      dispatch(dropDetail());
     },
   };
 };

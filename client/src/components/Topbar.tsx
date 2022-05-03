@@ -1,17 +1,17 @@
 import React, { useState, useMemo, useRef } from 'react';
-import { Link, useSearchParams, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { User, State, CartItem } from '../models/redux';
+import { User, State, CartItem, Product } from '../models/redux';
 import { logout } from '../redux/utils/thunkCreators';
-import { logo, emptyUser } from '../assets';
+import MenuDropModal from './subcomponents/MenuDropModal';
 import OutsiderAlerter from './subcomponents/OutsiderAlerter';
 //mx-auto - centers container
 //max-w-7xl - constrains the container
 
 //relative makes it so that the sub component's css is relative to this container
-type Props = { user: User; logout: any; cart: CartItem[] };
+type Props = { user: User; logout: any; cart: CartItem[]; detail: Product };
 
-const Topbar: React.FC<Props> = ({ user, logout, cart }) => {
+const Topbar: React.FC<Props> = ({ user, logout, cart, detail }) => {
   const regLogRef: any = useRef();
   const shopRef: any = useRef();
   const menuRef: any = useRef();
@@ -53,7 +53,7 @@ const Topbar: React.FC<Props> = ({ user, logout, cart }) => {
     return (
       <OutsiderAlerter onClickEvent={toggleUserMenu} theRef={menuRef}>
         <div
-          className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'
+          className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-30'
           role='menu'
           aria-orientation='vertical'
           aria-labelledby='user-menu-button'
@@ -102,7 +102,7 @@ const Topbar: React.FC<Props> = ({ user, logout, cart }) => {
     return (
       <OutsiderAlerter onClickEvent={toggleRegLogMenu} theRef={regLogRef}>
         <div
-          className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'
+          className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50'
           role='menu'
           aria-orientation='vertical'
           aria-labelledby='user-menu-button'
@@ -207,47 +207,65 @@ const Topbar: React.FC<Props> = ({ user, logout, cart }) => {
   };
 
   return (
-    <nav className='pt-5 sticky w-full bg-background top-0 shadow-inner'>
-      <div className='max-w-7xl mx-auto px-2 sm:px-6 lg:px-8'>
-        <div className='h-20 relative flex items-center justify-between'>
-          <div className='absolute inset-y-0 left-0 flex items-center sm:hidden'>
-            {/* {hidden menu button on small screen} */}
+    <nav className={`sticky w-full ${detail ? 'bg-secondaryDeep' : 'bg-background'} top-0 flex flex-col`}>
+      <div id='topBar' className='pt-6 mx-auto px-2 flex w-full h-auto justify-between content-center z-50'>
+        {/* {hidden menu button on small screen} */}
+        {detail ? (
+          <Link to='/product'>
             <button
               type='button'
               className='inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-primary  focus:outline-none focus:ring-2 focus:ring-inset ring-transparent'
               aria-controls='mobile-menu'
               aria-expanded='false'
-              onClick={toggleShopMenu}
               ref={shopRef}
             >
               <span className='sr-only'>Open main menu</span>
-              <svg className='block h-6 w-6 fill-black' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' stroke='currentColor' aria-hidden='true'>
-                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d={`${!shopMenu ? 'M4 6h16M4 12h16M4 18h16' : 'M6 18L18 6M6 6l12 12'}`} />
+              <svg width='12' height='21' viewBox='0 0 12 21' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                <path d='M10.25 19L1.75 10.5L10.25 2' stroke='#667080' strokeWidth='3.17' strokeLinecap='round' strokeLinejoin='round' />
               </svg>
             </button>
-          </div>
-          <div className='flex-1 flex items-center justify-center sm:items-stretch sm:justify-start'>
-            <div className='hidden items-center sm:flex sm:ml-6'>
-              <div className='flex space-x-4'>
-                {menuItems.map(([link, title]) => (
-                  <Link to={link === 'all' ? 'product' : `/product?category=${link}`} key={title}>
-                    <div
-                      key={title}
-                      className={`shadow-md bg-white hover:bg-secondaryDeep block px-3 py-2 rounded-md text-base font-medium ${
-                        searchParams.get('category') === link ? 'bg-primary text-white' : 'text-primary'
-                      }`}
-                    >
-                      {title}
-                    </div>
-                  </Link>
-                ))}
-              </div>
+          </Link>
+        ) : (
+          <button
+            type='button'
+            className='inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-primary  focus:outline-none focus:ring-2 focus:ring-inset ring-transparent'
+            aria-controls='mobile-menu'
+            aria-expanded='false'
+            onClick={toggleShopMenu}
+            ref={shopRef}
+          >
+            <span className='sr-only'>Open main menu</span>
+            <svg className='block h-6 w-6 fill-black' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' stroke='currentColor' aria-hidden='true'>
+              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d={`${!shopMenu ? 'M4 6h16M4 12h16M4 18h16' : 'M6 18L18 6M6 6l12 12'}`} />
+            </svg>
+          </button>
+        )}
+        <div className='flex-1 hidden items-center justify-center sm:items-stretch sm:justify-start sm:flex '>
+          <div className='items-center sm:ml-6'>
+            <div className='flex space-x-4'>
+              {menuItems.map(([link, title]) => (
+                <Link to={link === 'all' ? 'product' : `/product?category=${link}`} key={title}>
+                  <div
+                    key={title}
+                    className={`shadow-md bg-white hover:bg-secondaryDeep block px-3 py-2 rounded-md text-base font-medium ${
+                      searchParams.get('category') === link ? 'bg-primary text-white' : 'text-primary'
+                    }`}
+                  >
+                    {title}
+                  </div>
+                </Link>
+              ))}
             </div>
-            {searchParams.get('category') && <div className='text-black font-semibold sm:hidden'>{searchParams.get('category')!.toUpperCase()}</div>}
           </div>
-          <div className='absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0'>
-            {/* Cart Register/Login button */}
-            {/* <Link to={'/cart'}>
+        </div>
+        {searchParams.get('category') && (
+          <div className='text-black font-semibold sm:hidden table'>
+            <div className='align-middle table-cell'>{searchParams.get('category')!.toUpperCase()}</div>
+          </div>
+        )}
+        <div className='flex items-center sm:static sm:inset-auto sm:ml-6 sm:pr-0'>
+          {/* Cart Register/Login button */}
+          {/* <Link to={'/cart'}>
               <button type='button' className='bg-light p-1 rounded-full text-gray-400 hover:text-white '>
                 <div className='flex space-x-2 px-2'>
                   <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
@@ -262,16 +280,24 @@ const Topbar: React.FC<Props> = ({ user, logout, cart }) => {
                 </div>
               </button>
             </Link> */}
-            <div className='ml-3 relative'>
-              <div>
-                {user.email ? <UserLogo /> : <NoUserLogo />}
-                {regLogMenu && <DropRegLogMenu />}
-              </div>
-              {userMenu && <DropDownUserMenu />}
+          <div>
+            <div>
+              {user.email ? <UserLogo /> : <NoUserLogo />}
+              {regLogMenu && (
+                <MenuDropModal>
+                  <DropRegLogMenu />
+                </MenuDropModal>
+              )}
             </div>
+            {userMenu && (
+              <MenuDropModal>
+                <DropDownUserMenu />
+              </MenuDropModal>
+            )}
           </div>
         </div>
       </div>
+      <div className='w-full h-6' />
       {shopMenu && <DropDownProductMenu />}
     </nav>
   );
@@ -281,6 +307,7 @@ const mapStateToProps = (state: State) => {
   return {
     user: state.user,
     cart: state.cart,
+    detail: state.detail,
   };
 };
 

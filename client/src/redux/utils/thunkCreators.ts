@@ -2,6 +2,7 @@ import axios from 'axios';
 import { add_To_Cart, fetch_Cart, drop_Cart, adjust_Cart_Item, remove_Cart_Item } from '../actions/cartActions';
 import { fetch_User, drop_User, update_User } from '../actions/userActions';
 import { fetch_Products, update_Product } from '../actions/productsActions';
+import { fetch_Detail, drop_Detail } from '../actions/detailActions';
 import { CartItem, Product } from '../../models/redux';
 import { Dispatch } from 'redux';
 
@@ -145,6 +146,24 @@ export const createOrder = (currCart: CartItem[]) => async (dispatch: Dispatch) 
     await Promise.all(promiseArray);
     dispatch(update_Product(currCart));
     dispatch(drop_Cart());
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+//DETAILS
+export const fetchDetail = (name: string) => async (dispatch: Dispatch) => {
+  try {
+    let { data } = await axios.get(`http://localhost:5000/productByName?name=${name}`);
+    dispatch(fetch_Detail(data));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const dropDetail = () => async (dispatch: Dispatch) => {
+  try {
+    dispatch(drop_Detail());
   } catch (error) {
     console.error(error);
   }

@@ -13,6 +13,12 @@ module.exports = {
         secondaryDeep: '#C3C6C9',
         background: '#F8F8F8',
       },
+      translate: {
+        '1/10': '10%',
+      },
+      borderRadius: {
+        '1/2': '100px',
+      },
     },
   },
   plugins: [],
