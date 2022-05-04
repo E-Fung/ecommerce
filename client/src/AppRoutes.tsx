@@ -13,7 +13,6 @@ import CartPage from './CartPage';
 import LoginPage from './LoginPage';
 import ProfilePage from './ProfilePage';
 import OrderPage from './OrderPage';
-import CartNavbar from './components/subcomponents/CartNavbar';
 
 type Props = { user: User; fetchUser: any; fetchCart: any; dropDetail: any };
 

@@ -40,7 +40,7 @@ const CartPage: React.FC<Props> = ({ cart, user, createOrder }) => {
 
   return (
     <div className='justify-center flex flex-wrap grow text-black p-4'>
-      <div className='space-y-4'>
+      <div className='space-y-4 w-full'>
         {cart.map((product: CartItem, index: number) => (
           <div key={product.productId}>
             <CartCard product={product.Product} quantity={product.quantity} key={product.productId} />
