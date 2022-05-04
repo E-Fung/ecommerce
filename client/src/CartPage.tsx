@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { CartItem, State, User } from './models/redux';
 import { createOrder } from './redux/utils/thunkCreators';
 import CartCard from './components/CartCard';
@@ -8,27 +8,27 @@ import CartCard from './components/CartCard';
 type Props = { cart: CartItem[]; user: User; createOrder: any };
 
 const CartPage: React.FC<Props> = ({ cart, user, createOrder }) => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const getTotalItems = (): string => {
-    let totalQuantity: number = cart!.reduce(function (total: number, product: CartItem, index) {
-      return total + product.quantity;
-    }, 0);
-    return `Total (${totalQuantity} item${totalQuantity === 1 ? '' : 's'}):`;
-  };
+  // const getTotalItems = (): string => {
+  //   let totalQuantity: number = cart!.reduce(function (total: number, product: CartItem, index) {
+  //     return total + product.quantity;
+  //   }, 0);
+  //   return `Total (${totalQuantity} item${totalQuantity === 1 ? '' : 's'}):`;
+  // };
 
-  const getTotalCost = (): string => {
-    return cart!
-      .reduce(function (total: number, product: CartItem, index) {
-        return total + product.Product.price * product.quantity;
-      }, 0)
-      .toFixed(2);
-  };
+  // const getTotalCost = (): string => {
+  //   return cart!
+  //     .reduce(function (total: number, product: CartItem, index) {
+  //       return total + product.Product.price * product.quantity;
+  //     }, 0)
+  //     .toFixed(2);
+  // };
 
-  const handleCheckout = async () => {
-    await createOrder(cart);
-    navigate('/product');
-  };
+  // const handleCheckout = async () => {
+  //   await createOrder(cart);
+  //   navigate('/product');
+  // };
 
   if (!cart.length) {
     return (

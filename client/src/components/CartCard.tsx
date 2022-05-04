@@ -68,9 +68,9 @@ const CartCard: React.FC<Props> = ({ product, user, quantity, adjustCartItem, de
           <img className='max-h-full max-w-full' src={product?.photoUrl} alt='' />
         </div>
       </Link>
-      <div className='flex justify-between w-2/5 items-center'>
+      <div className='flex justify-between items-center'>
         <div className='flex flex-col space-y-2 w-full'>
-          <div className='font-medium truncate'>{product?.name}</div>
+          <div className='font-medium'>{product?.name}</div>
           <div className='font-semibold text-gray-400'>${(product?.price! * quantity).toFixed(2)}</div>
         </div>
       </div>

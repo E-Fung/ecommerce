@@ -2,16 +2,17 @@ import React, { useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { State, CartItem, Product, User } from '../models/redux';
-import { addToCart } from '../redux/utils/thunkCreators';
-
+import { addToCart, createOrder } from '../redux/utils/thunkCreators';
+import { useNavigate } from 'react-router-dom';
 //mx-auto - centers container
 //max-w-7xl - constrains the container
 
 //relative makes it so that the sub component's css is relative to this container
-type Props = { cart: CartItem[]; detail: Product; addToCart: any; user: User };
+type Props = { cart: CartItem[]; detail: Product; addToCart: any; user: User; createOrder: any };
 
-const Navbar: React.FC<Props> = ({ cart, detail, user, addToCart }) => {
+const Navbar: React.FC<Props> = ({ cart, detail, user, addToCart, createOrder }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const sum = cart.reduce((partialSum, currentValue) => partialSum + currentValue.quantity, 0);
 
   const handleAddToCart = async (event: any) => {
@@ -26,9 +27,23 @@ const Navbar: React.FC<Props> = ({ cart, detail, user, addToCart }) => {
     }
   };
 
+  const getTotalCost = (): string => {
+    return cart!
+      .reduce(function (total: number, product: CartItem, index) {
+        return total + product.Product.price * product.quantity;
+      }, 0)
+      .toFixed(2);
+  };
+
   const dropdownRange = useMemo(() => {
     return Array.from({ length: 9 }, (_, i) => i + 1);
   }, []);
+
+  const handleCheckout = async (event: any) => {
+    event.preventDefault();
+    await createOrder(cart);
+    navigate('/product');
+  };
 
   return (
     <div className='sticky bottom-0 flex flex-col'>
@@ -59,8 +74,27 @@ const Navbar: React.FC<Props> = ({ cart, detail, user, addToCart }) => {
           </form>
         </div>
       )}
-      <div className={`${detail ? 'bg-primary' : ''}`}>
-        <nav id='navbar' style={{ boxShadow: '0px 6px 10px 0px #393F48' }} className='bg-white px-4 pt-4 pb-2 w-full rounded-t-3xl flex justify-between'>
+      {location.pathname === '/cart' && (
+        <div className='bg-primary rounded-t-3xl w-full px-8 pt-4'>
+          <div className='flex justify-between align-center mb-4'>
+            <div className='text-white'>
+              <div className='text-gray-300 text-sm'>Total</div>
+              <div className='text-md font-semibold'>${getTotalCost()}</div>
+            </div>
+            <div className='flex content-center'>
+              <button
+                onClick={handleCheckout}
+                className='text-white bg-primaryDeep hover:bg-highlight focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center '
+                disabled={user.email ? false : true}
+              >
+                CHECK OUT
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className={`${detail || location.pathname === '/cart' ? 'bg-primary' : ''}`}>
+        <nav id='navbar' style={{ boxShadow: '0px 6px 10px 0px #393F48' }} className='bg-white px-6 pt-4 pb-2 w-full rounded-t-3xl flex justify-between'>
           <Link to={'/product'}>
             <div className={`flex flex-col ${location.pathname === '/product' ? 'fill-primary' : 'fill-secondaryDeep'} space-y-2 hover:fill-primary`}>
               <svg width='21' height='18' viewBox='0 0 21 18' xmlns='http://www.w3.org/2000/svg'>
@@ -127,6 +161,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     addToCart: (params: CartItem) => {
       dispatch(addToCart(params));
+    },
+    createOrder: (currCart: CartItem[]) => {
+      dispatch(createOrder(currCart));
     },
   };
 };

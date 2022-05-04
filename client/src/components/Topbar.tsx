@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef } from 'react';
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { User, State, CartItem, Product } from '../models/redux';
 import { logout } from '../redux/utils/thunkCreators';
@@ -15,6 +15,7 @@ const Topbar: React.FC<Props> = ({ user, logout, cart, detail }) => {
   const regLogRef: any = useRef();
   const shopRef: any = useRef();
   const menuRef: any = useRef();
+  const location = useLocation();
 
   const [userMenu, setUserMenu] = useState<boolean>(false);
   const [shopMenu, setShopMenu] = useState<boolean>(false);
@@ -210,21 +211,20 @@ const Topbar: React.FC<Props> = ({ user, logout, cart, detail }) => {
     <nav className={`sticky w-full ${detail ? 'bg-secondaryDeep' : 'bg-background'} top-0 flex flex-col`}>
       <div id='topBar' className='pt-6 mx-auto px-2 flex w-full h-auto justify-between content-center z-50'>
         {/* {hidden menu button on small screen} */}
-        {detail ? (
-          <Link to='/product'>
-            <button
-              type='button'
-              className='inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-primary  focus:outline-none focus:ring-2 focus:ring-inset ring-transparent'
-              aria-controls='mobile-menu'
-              aria-expanded='false'
-              ref={shopRef}
-            >
-              <span className='sr-only'>Open main menu</span>
-              <svg width='12' height='21' viewBox='0 0 12 21' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                <path d='M10.25 19L1.75 10.5L10.25 2' stroke='#667080' strokeWidth='3.17' strokeLinecap='round' strokeLinejoin='round' />
-              </svg>
-            </button>
-          </Link>
+        {detail || location.pathname === '/cart' ? (
+          <button
+            type='button'
+            className='inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-primary  focus:outline-none focus:ring-2 focus:ring-inset ring-transparent'
+            aria-controls='mobile-menu'
+            aria-expanded='false'
+            onClick={() => navigate(-1)}
+            ref={shopRef}
+          >
+            <span className='sr-only'>Open main menu</span>
+            <svg width='12' height='21' viewBox='0 0 12 21' fill='none' xmlns='http://www.w3.org/2000/svg'>
+              <path d='M10.25 19L1.75 10.5L10.25 2' stroke='#667080' strokeWidth='3.17' strokeLinecap='round' strokeLinejoin='round' />
+            </svg>
+          </button>
         ) : (
           <button
             type='button'
