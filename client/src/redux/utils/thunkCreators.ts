@@ -17,7 +17,7 @@ axios.interceptors.request.use(async function (config) {
 //USER
 export const fetchUser = () => async (dispatch: Dispatch) => {
   try {
-    const { data } = await axios.get('http://localhost:5000/auth/user');
+    const { data } = await axios.get('https://neat-shell-349400.uc.r.appspot.com/auth/user');
     dispatch(fetch_User(data));
   } catch (error) {
     console.error(error);
@@ -26,7 +26,7 @@ export const fetchUser = () => async (dispatch: Dispatch) => {
 
 export const register = (credentials: { name: string; email: string; password: string }) => async (dispatch: Dispatch) => {
   try {
-    const { data } = await axios.post('http://localhost:5000/auth/register', credentials);
+    const { data } = await axios.post('https://neat-shell-349400.uc.r.appspot.com/auth/register', credentials);
     await localStorage.setItem('messenger-token', data.token);
     dispatch(fetch_User(data));
   } catch (error) {
@@ -36,7 +36,7 @@ export const register = (credentials: { name: string; email: string; password: s
 
 export const login = (credentials: { email: string; password: string }) => async (dispatch: Dispatch) => {
   try {
-    const { data } = await axios.post('http://localhost:5000/auth/login', credentials);
+    const { data } = await axios.post('https://neat-shell-349400.uc.r.appspot.com/auth/login', credentials);
     await localStorage.setItem('messenger-token', data.token);
     dispatch(fetch_User(data));
   } catch (error) {
@@ -46,7 +46,7 @@ export const login = (credentials: { email: string; password: string }) => async
 
 export const logout = () => async (dispatch: Dispatch) => {
   try {
-    await axios.delete('http://localhost:5000/auth/logout');
+    await axios.delete('https://neat-shell-349400.uc.r.appspot.com/auth/logout');
     await localStorage.removeItem('messenger-token');
     dispatch(drop_User());
     dispatch(drop_Cart());
@@ -57,7 +57,7 @@ export const logout = () => async (dispatch: Dispatch) => {
 
 export const updateUser = (photoUrl: string) => async (dispatch: Dispatch) => {
   try {
-    await axios.post('http://localhost:5000/user', { photoUrl: photoUrl });
+    await axios.post('https://neat-shell-349400.uc.r.appspot.com/user', { photoUrl: photoUrl });
     dispatch(update_User(photoUrl));
   } catch (error) {
     console.error(error);
@@ -69,11 +69,11 @@ export const fetchCart = (currCart: CartItem[]) => async (dispatch: Dispatch) =>
   let promiseArray: any[] = [];
   if (currCart) {
     currCart.forEach(async (product: CartItem) => {
-      promiseArray.push(axios.post('http://localhost:5000/cart', product));
+      promiseArray.push(axios.post('https://neat-shell-349400.uc.r.appspot.com/cart', product));
     });
   }
   await Promise.all(promiseArray);
-  const { data } = await axios.get('http://localhost:5000/cart');
+  const { data } = await axios.get('https://neat-shell-349400.uc.r.appspot.com/cart');
   dispatch(fetch_Cart(data));
 };
 
@@ -88,9 +88,9 @@ export const dropCart = () => async (dispatch: Dispatch) => {
 export const addToCart = (params: CartItem) => async (dispatch: Dispatch) => {
   try {
     if (params.userId) {
-      await axios.post('http://localhost:5000/cart', params);
+      await axios.post('https://neat-shell-349400.uc.r.appspot.com/cart', params);
     }
-    const { data }: any = await axios.get(`http://localhost:5000/productById?productId=${params.productId}`);
+    const { data }: any = await axios.get(`https://neat-shell-349400.uc.r.appspot.com/productById?productId=${params.productId}`);
     const temp: CartItem = { ...{ Product: data }, ...params };
     dispatch(add_To_Cart(temp));
   } catch (error) {
@@ -101,7 +101,7 @@ export const addToCart = (params: CartItem) => async (dispatch: Dispatch) => {
 export const adjustCartItem = (params: CartItem) => async (dispatch: Dispatch) => {
   try {
     if (params.userId) {
-      await axios.post('http://localhost:5000/adjustCartItem', params);
+      await axios.post('https://neat-shell-349400.uc.r.appspot.com/adjustCartItem', params);
     }
     dispatch(adjust_Cart_Item(params));
   } catch (error) {
@@ -112,7 +112,7 @@ export const adjustCartItem = (params: CartItem) => async (dispatch: Dispatch) =
 export const deleteCartItem = (params: CartItem) => async (dispatch: Dispatch) => {
   try {
     if (params.userId) {
-      await axios.post('http://localhost:5000/deleteCartItem', params);
+      await axios.post('https://neat-shell-349400.uc.r.appspot.com/deleteCartItem', params);
     }
     dispatch(remove_Cart_Item(params));
   } catch (error) {
@@ -123,7 +123,7 @@ export const deleteCartItem = (params: CartItem) => async (dispatch: Dispatch) =
 //PRODUCT
 export const fetchProducts = (params: string) => async (dispatch: Dispatch) => {
   try {
-    let { data }: { data: Product[] } = await axios.get(`http://localhost:5000/product?category=${params}`);
+    let { data }: { data: Product[] } = await axios.get(`https://neat-shell-349400.uc.r.appspot.com/product?category=${params}`);
     dispatch(fetch_Products(data));
   } catch (error) {
     console.error(error);
@@ -135,14 +135,14 @@ export const createOrder = (currCart: CartItem[]) => async (dispatch: Dispatch) 
   let promiseArray: any[] = [];
   try {
     if (currCart) {
-      const { data } = await axios.post('http://localhost:5000/order');
+      const { data } = await axios.post('https://neat-shell-349400.uc.r.appspot.com/order');
       currCart.forEach(async (product: CartItem) => {
         let params = { orderId: data.orderId, ...product, price: product.Product.price };
-        promiseArray.push(axios.post('http://localhost:5000/orderedProducts', params));
-        promiseArray.push(axios.post('http://localhost:5000/productUpdate', params));
+        promiseArray.push(axios.post('https://neat-shell-349400.uc.r.appspot.com/orderedProducts', params));
+        promiseArray.push(axios.post('https://neat-shell-349400.uc.r.appspot.com/productUpdate', params));
       });
     }
-    await axios.delete('http://localhost:5000/wipeCart');
+    await axios.delete('https://neat-shell-349400.uc.r.appspot.com/wipeCart');
     await Promise.all(promiseArray);
     dispatch(update_Product(currCart));
     dispatch(drop_Cart());
@@ -154,7 +154,7 @@ export const createOrder = (currCart: CartItem[]) => async (dispatch: Dispatch) 
 //DETAILS
 export const fetchDetail = (name: string) => async (dispatch: Dispatch) => {
   try {
-    let { data } = await axios.get(`http://localhost:5000/productByName?name=${name}`);
+    let { data } = await axios.get(`https://neat-shell-349400.uc.r.appspot.com/productByName?name=${name}`);
     dispatch(fetch_Detail(data));
   } catch (error) {
     console.error(error);
