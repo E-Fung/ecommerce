@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { fetchUser, fetchCart } from './redux/utils/thunkCreators';
-import { Routes, Route, Outlet, Navigate } from 'react-router-dom';
+import { fetchUser, fetchCart, dropDetail } from './redux/utils/thunkCreators';
+import { Routes, Route, Outlet, Navigate, useLocation } from 'react-router-dom';
 import { User, State, CartItem } from '../src/models/redux';
 import Register from './Register';
 import Navbar from './components/Navbar';
+import Topbar from './components/Topbar';
 import ProductContainer from './ProductsContainer';
 import ErrorPage from './ErrorPage';
 import ProductPage from './ProductPage';
@@ -13,12 +14,19 @@ import LoginPage from './LoginPage';
 import ProfilePage from './ProfilePage';
 import OrderPage from './OrderPage';
 
-type Props = { user: User; fetchUser: any; fetchCart: any };
+type Props = { user: User; fetchUser: any; fetchCart: any; dropDetail: any };
 
-const AppRoutes: React.FC<Props> = ({ user, fetchUser, fetchCart }) => {
+const AppRoutes: React.FC<Props> = ({ user, fetchUser, fetchCart, dropDetail }) => {
+  const location = useLocation();
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
+
+  useEffect(() => {
+    if (!location.pathname.includes('/product/')) {
+      dropDetail();
+    }
+  }, [location]);
 
   useEffect(() => {
     if (user.email) {
@@ -31,18 +39,24 @@ const AppRoutes: React.FC<Props> = ({ user, fetchUser, fetchCart }) => {
   const WithNav = () => {
     return (
       <>
-        <Navbar />
+        <Topbar />
         <Outlet />
+        <Navbar />
       </>
     );
   };
 
   const WithoutNav = () => {
-    return <Outlet />;
+    return (
+      <>
+        <Topbar />
+        <Outlet />
+      </>
+    );
   };
 
   return (
-    <>
+    <div className='min-h-screen min-w-screen flex flex-col'>
       <Routes>
         <Route element={<WithNav />}>
           <Route path='/' element={<Navigate to={'/product'} replace />} />
@@ -58,7 +72,7 @@ const AppRoutes: React.FC<Props> = ({ user, fetchUser, fetchCart }) => {
         </Route>
         <Route path='*' element={<ErrorPage />} />
       </Routes>
-    </>
+    </div>
   );
 };
 
@@ -75,6 +89,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     fetchCart(currCart: CartItem[]) {
       dispatch(fetchCart(currCart));
+    },
+    dropDetail() {
+      dispatch(dropDetail());
     },
   };
 };

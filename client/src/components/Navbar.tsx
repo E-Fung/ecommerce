@@ -1,268 +1,169 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import React, { useMemo } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { User, State, CartItem } from '../models/redux';
-import { logout } from '../redux/utils/thunkCreators';
-import { logo, emptyUser } from '../assets';
-import OutsiderAlerter from './subcomponents/OutsiderAlerter';
+import { State, CartItem, Product, User } from '../models/redux';
+import { addToCart, createOrder } from '../redux/utils/thunkCreators';
+import { useNavigate } from 'react-router-dom';
 //mx-auto - centers container
 //max-w-7xl - constrains the container
 
 //relative makes it so that the sub component's css is relative to this container
-type Props = { user: User; logout: any; cart: CartItem[] };
+type Props = { cart: CartItem[]; detail: Product; addToCart: any; user: User; createOrder: any };
 
-const Navbar: React.FC<Props> = ({ user, logout, cart }) => {
-  const regLogRef: any = useRef();
-  const shopRef: any = useRef();
-  const menuRef: any = useRef();
-
-  const [userMenu, setUserMenu] = useState<boolean>(false);
-  const [shopMenu, setShopMenu] = useState<boolean>(false);
-  const [regLogMenu, setRegLogMenu] = useState<boolean>(false);
-  const [searchParams] = useSearchParams();
+const Navbar: React.FC<Props> = ({ cart, detail, user, addToCart, createOrder }) => {
+  const location = useLocation();
   const navigate = useNavigate();
+  const sum = cart.reduce((partialSum, currentValue) => partialSum + currentValue.quantity, 0);
 
-  const menuItems = useMemo(() => {
-    return [
-      ['men', "Men's Clothing"],
-      ['women', "Women's Clothing"],
-      ['jewelery', 'Jewelery'],
-      ['electronics', 'Electronics'],
-    ];
+  const handleAddToCart = async (event: any) => {
+    event.preventDefault();
+    const quantity: number = Number(event.target.quantity.value);
+    const productId: number = detail!.productId;
+    if (user.userId) {
+      const userId = user.userId;
+      await addToCart({ quantity, userId, productId });
+    } else {
+      await addToCart({ quantity, productId });
+    }
+  };
+
+  const getTotalCost = (): string => {
+    return cart!
+      .reduce(function (total: number, product: CartItem, index) {
+        return total + product.Product.price * product.quantity;
+      }, 0)
+      .toFixed(2);
+  };
+
+  const dropdownRange = useMemo(() => {
+    return Array.from({ length: 9 }, (_, i) => i + 1);
   }, []);
 
-  const toggleRegLogMenu = () => {
-    setRegLogMenu(!regLogMenu);
-  };
-  const toggleUserMenu = () => {
-    setUserMenu(!userMenu);
-  };
-  const toggleShopMenu = () => {
-    setShopMenu(!shopMenu);
-  };
-
-  const handleLogout = async (event: any) => {
-    toggleUserMenu();
+  const handleCheckout = async (event: any) => {
     event.preventDefault();
-    await logout();
+    await createOrder(cart);
     navigate('/product');
   };
 
-  const sum = cart.reduce((partialSum, currentValue) => partialSum + currentValue.quantity, 0);
-
   return (
-    <nav className='bg-light sticky top-0'>
-      <div className='max-w-7xl mx-auto px-2 sm:px-6 lg:px-8'>
-        <div className='relative flex items-center justify-between'>
-          <div className='absolute inset-y-0 left-0 flex items-center sm:hidden'>
-            {/* {hidden menu button on small screen} */}
-            <button
-              type='button'
-              className='inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'
-              aria-controls='mobile-menu'
-              aria-expanded='false'
-              onClick={toggleShopMenu}
-              ref={shopRef}
-            >
-              <span className='sr-only'>Open main menu</span>
-              <svg className='block h-6 w-6' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor' aria-hidden='true'>
-                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d={`${!shopMenu ? 'M4 6h16M4 12h16M4 18h16' : 'M6 18L18 6M6 6l12 12'}`} />
-              </svg>
-            </button>
-          </div>
-          <div className='flex-1 flex items-center justify-center sm:items-stretch sm:justify-start'>
-            {/* Logo, and menu items */}
-            <Link to={'/product'}>
-              <div className='flex-shrink-0 flex items-center'>
-                {/* <img className='block lg:hidden h-16 w-auto' src={logo} alt='' />
-                <img className='hidden lg:block h-16 w-auto' src={logo} alt='' /> */}
-                <img src={logo} alt='' />
-              </div>
-            </Link>
-            <div className='hidden items-center sm:flex sm:ml-6'>
-              <div className='flex space-x-4'>
-                {menuItems.map(([link, title]) => (
-                  <Link to={`/product?category=${link}`} key={title}>
-                    <div
-                      key={title}
-                      className={`text-white hover:bg-dark px-3 py-2 rounded-md text-sm font-medium ${
-                        searchParams.get('category') === link ? 'bg-highlight' : ''
-                      }`}
-                    >
-                      {title}
-                    </div>
-                  </Link>
-                ))}
-              </div>
+    <div className='sticky bottom-0 flex flex-col'>
+      {detail && (
+        <div id='addCartNavbar' className='bg-primary rounded-t-3xl w-full px-8 pt-4'>
+          <form onSubmit={handleAddToCart} className='flex justify-between align-center mb-4'>
+            <div className='text-white'>
+              <div className='text-gray-300 text-sm'>Price</div>
+              <div className='text-md font-semibold'>${detail.price.toFixed(2)}</div>
             </div>
-          </div>
-          <div className='absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0'>
-            {/* Cart Register/Login button */}
-            {user.email && <div className='hidden sm:flex'>Hello {user.name}</div>}
-            <Link to={'/cart'}>
-              <button type='button' className='bg-light p-1 rounded-full text-gray-400 hover:text-white '>
-                {/* Cart */}
-                <div className='flex space-x-2 px-2'>
-                  <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth='2'
-                      d='M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z'
-                    />
-                  </svg>
-                  <div className='text-highlight font-bold'>{sum > 10 ? '10+' : sum}</div>
-                </div>
+            <div className='flex items-center space-x-2'>
+              <select id='quantity' name='quantity' className='text-black rounded-lg'>
+                {dropdownRange.map((number) => (
+                  <option value={number} key={number} className='text-black'>
+                    {number}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className='flex content-center'>
+              <button
+                type='submit'
+                className='text-white bg-primaryDeep hover:bg-highlight focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center '
+              >
+                Add to Cart
               </button>
-            </Link>
-            <div className='ml-3 relative'>
-              <div>
-                {user.email && (
-                  <button
-                    type='button'
-                    className='bg-white flex justify-center content-center text-sm rounded-full overflow-clip'
-                    id='user-menu-button'
-                    aria-expanded='false'
-                    aria-haspopup='true'
-                    onClick={toggleUserMenu}
-                    ref={menuRef}
-                  >
-                    <span className='sr-only'>Open user menu</span>
-                    {user.photoUrl ? (
-                      <div className='h-10 w-10 flex items-center justify-center'>
-                        <img src={user.photoUrl} alt='' className='max-w-full max-h-full' />
-                      </div>
-                    ) : (
-                      <svg xmlns='http://www.w3.org/2000/svg' className='h-10 w-10' fill='none' viewBox='0 0 24 24' stroke='black' strokeWidth={2}>
-                        <path strokeLinecap='round' strokeLinejoin='round' d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' />
-                      </svg>
-                    )}
-                  </button>
-                )}
-                {!user.email && <img ref={regLogRef} className='cursor-pointer' onClick={toggleRegLogMenu} src={emptyUser} alt='' />}
-                {regLogMenu && (
-                  <OutsiderAlerter onClickEvent={toggleRegLogMenu} theRef={regLogRef}>
-                    <div
-                      className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'
-                      role='menu'
-                      aria-orientation='vertical'
-                      aria-labelledby='user-menu-button'
-                      tabIndex={-1}
-                    >
-                      <Link to='/register'>
-                        <div
-                          onClick={toggleRegLogMenu}
-                          className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
-                          role='menuitem'
-                          tabIndex={-1}
-                          id={`user-menu-item-0`}
-                          key={'Your Profile'}
-                        >
-                          Register
-                        </div>
-                      </Link>
-                      <Link to='/login'>
-                        <div
-                          onClick={toggleRegLogMenu}
-                          className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
-                          role='menuitem'
-                          tabIndex={-1}
-                          id={`user-menu-item-1`}
-                          key={'Sign out'}
-                        >
-                          Login
-                        </div>
-                      </Link>
-                    </div>
-                  </OutsiderAlerter>
-                )}
-              </div>
-              {userMenu && (
-                <OutsiderAlerter onClickEvent={toggleUserMenu} theRef={menuRef}>
-                  <div
-                    className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'
-                    role='menu'
-                    aria-orientation='vertical'
-                    aria-labelledby='user-menu-button'
-                    tabIndex={-1}
-                  >
-                    <Link to='/profile'>
-                      <div
-                        onClick={toggleUserMenu}
-                        className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
-                        role='menuitem'
-                        tabIndex={-1}
-                        id={`user-menu-item-0`}
-                        key={'Your Profile'}
-                      >
-                        {'Your Profile'}
-                      </div>
-                    </Link>
-                    <Link to='/orders'>
-                      <div
-                        onClick={toggleUserMenu}
-                        className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
-                        role='menuitem'
-                        tabIndex={-1}
-                        id={`user-menu-item-1`}
-                        key={'Past Orders'}
-                      >
-                        {'Past Orders'}
-                      </div>
-                    </Link>
-                    <div
-                      onClick={handleLogout}
-                      className='block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:text-orange-500 hover:underline'
-                      role='menuitem'
-                      tabIndex={-1}
-                      id={`user-menu-item-2`}
-                      key={'Sign out'}
-                    >
-                      {'Sign out'}
-                    </div>
-                  </div>
-                </OutsiderAlerter>
-              )}
+            </div>
+          </form>
+        </div>
+      )}
+      {location.pathname === '/cart' && (
+        <div className='bg-primary rounded-t-3xl w-full px-8 pt-4'>
+          <div className='flex justify-between align-center mb-4'>
+            <div className='text-white'>
+              <div className='text-gray-300 text-sm'>Total</div>
+              <div className='text-md font-semibold'>${getTotalCost()}</div>
+            </div>
+            <div className='flex content-center'>
+              <button
+                onClick={handleCheckout}
+                className='text-white bg-primaryDeep hover:bg-highlight focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center '
+                disabled={user.email ? false : true}
+              >
+                CHECK OUT
+              </button>
             </div>
           </div>
         </div>
-      </div>
-      {shopMenu && (
-        <OutsiderAlerter onClickEvent={toggleShopMenu} theRef={shopRef}>
-          <div className='sm:hidden' id='mobile-menu'>
-            <div className='px-2 pt-2 pb-3 space-y-1'>
-              {menuItems.map(([link, title]) => (
-                <Link to={`/product?category=${link}`} key={title}>
-                  <div
-                    key={title}
-                    onClick={toggleShopMenu}
-                    className={`text-gray-300 hover:bg-dark block px-3 py-2 rounded-md text-base font-medium ${
-                      searchParams.get('category') === link ? 'bg-highlight' : ''
-                    }`}
-                  >
-                    {title}
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </OutsiderAlerter>
       )}
-    </nav>
+      <div className={`${detail || location.pathname === '/cart' ? 'bg-primary' : ''}`}>
+        <nav id='navbar' style={{ boxShadow: '0px 6px 10px 0px #393F48' }} className='bg-white px-6 pt-4 pb-2 w-full rounded-t-3xl flex justify-between'>
+          <Link to={'/product'}>
+            <div className={`flex flex-col ${location.pathname === '/product' ? 'fill-primary' : 'fill-secondaryDeep'} space-y-2 hover:fill-primary`}>
+              <svg width='21' height='18' viewBox='0 0 21 18' xmlns='http://www.w3.org/2000/svg'>
+                <path d='M8.41665 17.8333V11.5833H12.5833V17.8333H17.7916V9.5H20.9166L10.5 0.125L0.083313 9.5H3.20831V17.8333H8.41665Z' />
+              </svg>
+              <div className={`flex justify-center ${location.pathname === '/product' ? 'fill-primary' : 'fill-transparent'}`}>
+                <svg width='8' height='2' viewBox='0 0 8 2' xmlns='http://www.w3.org/2000/svg'>
+                  <rect width='8' height='2' rx='1' />
+                </svg>
+              </div>
+              {/* <span className='bottom-full text-black absolute '>Tooltip text</span> */}
+            </div>
+          </Link>
+          <Link to={'/wishlist'}>
+            <div>
+              <div className={`flex flex-col ${location.pathname === '/wishlist' ? 'fill-primary' : 'fill-secondaryDeep'} space-y-2 hover:fill-primary`}>
+                <svg width='22' height='20' viewBox='0 0 22 20' xmlns='http://www.w3.org/2000/svg'>
+                  <path d='M10.8334 19.2396L9.323 17.8646C3.95842 13 0.416748 9.79167 0.416748 5.85417C0.416748 2.64583 2.93758 0.125 6.14592 0.125C7.95842 0.125 9.698 0.96875 10.8334 2.30208C11.9688 0.96875 13.7084 0.125 15.5209 0.125C18.7292 0.125 21.2501 2.64583 21.2501 5.85417C21.2501 9.79167 17.7084 13 12.3438 17.875L10.8334 19.2396Z' />
+                </svg>{' '}
+                <div className={`flex justify-center ${location.pathname === '/wishlist' ? 'fill-primary' : 'fill-transparent'}`}>
+                  <svg width='8' height='2' viewBox='0 0 8 2' xmlns='http://www.w3.org/2000/svg'>
+                    <rect width='8' height='2' rx='1' />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </Link>
+          <Link to={'/cart'}>
+            <div>
+              {sum !== 0 && (
+                <div className='flex justify-center'>
+                  <div className='text-white text-xs font-semibold absolute bg-highlight rounded-full px-1 -translate-y-1/2 translate-x-1/2'>
+                    {sum > 10 ? '10+' : sum}
+                  </div>
+                </div>
+              )}
+              <div className={`flex flex-col ${location.pathname === '/cart' ? 'fill-primary' : 'fill-secondaryDeep'} space-y-2 hover:fill-primary`}>
+                <svg width='21' height='21' viewBox='0 0 21 21' xmlns='http://www.w3.org/2000/svg'>
+                  <path d='M6.29163 16.75C5.14579 16.75 4.21871 17.6875 4.21871 18.8333C4.21871 19.9792 5.14579 20.9167 6.29163 20.9167C7.43746 20.9167 8.37496 19.9792 8.37496 18.8333C8.37496 17.6875 7.43746 16.75 6.29163 16.75ZM0.041626 0.0833435V2.16668H2.12496L5.87496 10.0729L4.46871 12.625C4.30204 12.9167 4.20829 13.2604 4.20829 13.625C4.20829 14.7708 5.14579 15.7083 6.29163 15.7083H18.7916V13.625H6.72913C6.58329 13.625 6.46871 13.5104 6.46871 13.3646L6.49996 13.2396L7.43746 11.5417H15.1979C15.9791 11.5417 16.6666 11.1146 17.0208 10.4688L20.75 3.70834C20.8333 3.56251 20.875 3.38543 20.875 3.20834C20.875 2.63543 20.4062 2.16668 19.8333 2.16668H4.42704L3.44788 0.0833435H0.041626ZM16.7083 16.75C15.5625 16.75 14.6354 17.6875 14.6354 18.8333C14.6354 19.9792 15.5625 20.9167 16.7083 20.9167C17.8541 20.9167 18.7916 19.9792 18.7916 18.8333C18.7916 17.6875 17.8541 16.75 16.7083 16.75Z' />
+                </svg>{' '}
+                <div className={`flex justify-center ${location.pathname === '/cart' ? 'fill-primary' : 'fill-transparent'}`}>
+                  <svg width='8' height='2' viewBox='0 0 8 2' xmlns='http://www.w3.org/2000/svg'>
+                    <rect width='8' height='2' rx='1' />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </nav>
+      </div>
+    </div>
   );
 };
 
 const mapStateToProps = (state: State) => {
   return {
-    user: state.user,
     cart: state.cart,
+    detail: state.detail,
+    user: state.user,
   };
 };
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    logout: () => {
-      dispatch(logout());
+    addToCart: (params: CartItem) => {
+      dispatch(addToCart(params));
+    },
+    createOrder: (currCart: CartItem[]) => {
+      dispatch(createOrder(currCart));
     },
   };
 };

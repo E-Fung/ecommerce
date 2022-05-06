@@ -29,7 +29,7 @@ const OrderPage: React.FC<Props> = ({ user }) => {
   }
 
   return (
-    <div className='justify-center flex flex-wrap max-w-7xl mx-auto p-4 sm:px-6 lg:px-52 text-black space-y-2'>
+    <div className='justify-center flex flex-wrap p-4 text-black space-y-2'>
       {orders?.map((order) => (
         <OrderCard key={order.orderId} order={order} />
       ))}

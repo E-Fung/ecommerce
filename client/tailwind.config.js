@@ -7,6 +7,17 @@ module.exports = {
         light: 'rgb(76,76,76)',
         highlight: 'rgb(166,139,88)',
         accent: 'rgb(0,0,0)',
+        primary: '#667080',
+        secondary: '#EEF1F4',
+        primaryDeep: '#393F48',
+        secondaryDeep: '#C3C6C9',
+        background: '#F8F8F8',
+      },
+      translate: {
+        '1/10': '10%',
+      },
+      borderRadius: {
+        '1/2': '100px',
       },
     },
   },
