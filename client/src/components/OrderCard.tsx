@@ -12,13 +12,13 @@ const OrderCard: React.FC<Props> = ({ order }) => {
   };
 
   return (
-    <div className='bg-white rounded-lg border-4 w-full'>
-      <div className='flex p-4 justify-between'>
+    <div className='bg-white rounded-lg border-2 w-full p-4'>
+      <div className='flex justify-between'>
         <div>Order#{order.orderId}</div>
         <div>Total: ${totalCost().toFixed(2)}</div>
         <div>Order Placed {order.createdAt.substring(0, 10)}</div>
       </div>
-      <div className='p-4 space-y-2'>
+      <div className='space-y-2'>
         {order.OrderedProducts.map((orderedProduct) => (
           <OrderedProductCard key={orderedProduct.orderedProductId} productDetail={orderedProduct} />
         ))}

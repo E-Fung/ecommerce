@@ -39,13 +39,15 @@ const LoginPage: React.FC<Props> = (props) => {
   }
 
   return (
-    <div className='min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'>
+    <div className='min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 text-black'>
       <div className='max-w-md w-full space-y-8'>
         <div>
-          <Link to={'/product'}>
-            <img className='mx-auto h-12 w-auto' src={logo} alt='' />
+          <Link to={'/product'} className='flex justify-center'>
+            <svg width='40' height='40' viewBox='0 0 21 18' xmlns='http://www.w3.org/2000/svg'>
+              <path d='M8.41665 17.8333V11.5833H12.5833V17.8333H17.7916V9.5H20.9166L10.5 0.125L0.083313 9.5H3.20831V17.8333H8.41665Z' />
+            </svg>
           </Link>
-          <h2 className='mt-6 text-center text-3xl font-extrabold'>Login</h2>
+          <h2 className='mt-6 text-center text-3xl font-bold text-primaryDeep'>Login</h2>
         </div>
         <form className='mt-8 space-y-6' action='#' onSubmit={handleLogin}>
           <input type='hidden' name='remember' defaultValue='true' />
@@ -70,10 +72,10 @@ const LoginPage: React.FC<Props> = (props) => {
           <div>
             <button
               type='submit'
-              className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-highlight focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+              className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-white'
             >
               <span className='absolute left-0 inset-y-0 flex items-center pl-3'>
-                <LockClosedIcon className='h-5 w-5 text-white' aria-hidden='true' />
+                <LockClosedIcon className='h-5 w-5' aria-hidden='true' />
               </span>
               Login
             </button>

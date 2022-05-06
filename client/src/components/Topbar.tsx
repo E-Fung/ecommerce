@@ -211,7 +211,7 @@ const Topbar: React.FC<Props> = ({ user, logout, cart, detail }) => {
     <nav className={`sticky w-full ${detail ? 'bg-secondaryDeep' : 'bg-background'} top-0 flex flex-col`}>
       <div id='topBar' className='pt-6 mx-auto px-2 flex w-full h-auto justify-between content-center z-50'>
         {/* {hidden menu button on small screen} */}
-        {detail || location.pathname === '/cart' ? (
+        {location.pathname !== '/product' ? (
           <button
             type='button'
             className='inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-primary  focus:outline-none focus:ring-2 focus:ring-inset ring-transparent'
@@ -280,21 +280,23 @@ const Topbar: React.FC<Props> = ({ user, logout, cart, detail }) => {
                 </div>
               </button>
             </Link> */}
-          <div>
+          {location.pathname !== '/register' && location.pathname !== '/login' && (
             <div>
-              {user.email ? <UserLogo /> : <NoUserLogo />}
-              {regLogMenu && (
+              <div>
+                {user.email ? <UserLogo /> : <NoUserLogo />}
+                {regLogMenu && (
+                  <MenuDropModal>
+                    <DropRegLogMenu />
+                  </MenuDropModal>
+                )}
+              </div>
+              {userMenu && (
                 <MenuDropModal>
-                  <DropRegLogMenu />
+                  <DropDownUserMenu />
                 </MenuDropModal>
               )}
             </div>
-            {userMenu && (
-              <MenuDropModal>
-                <DropDownUserMenu />
-              </MenuDropModal>
-            )}
-          </div>
+          )}
         </div>
       </div>
       <div className='w-full h-6' />

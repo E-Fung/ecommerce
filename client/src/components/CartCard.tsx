@@ -63,7 +63,7 @@ const CartCard: React.FC<Props> = ({ product, user, quantity, adjustCartItem, de
 
   return (
     <div className='flex bg-white text-black border-2 rounded-lg justify-between p-2 w-1-2 space-x-3 relative'>
-      <Link to={`/product/${product.name}`}>
+      <Link to={`/product/${product.name}`} className='flex items-center'>
         <div className='h-20 w-20 p-1 flex items-center justify-center content-center'>
           <img className='max-h-full max-w-full' src={product?.photoUrl} alt='' />
         </div>

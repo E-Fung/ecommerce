@@ -6,7 +6,7 @@ type Props = { productDetail: OrderedProducts };
 
 const OrderedProductCard: React.FC<Props> = ({ productDetail }) => {
   return (
-    <div className='flex border-4 rounded-lg p-2 justify-between'>
+    <div className='flex border-2 rounded-lg p-2 justify-between'>
       <div className='flex'>
         <Link to={`/product/${productDetail.Product.name}`}>
           <div className='h-20 w-20 flex items-center justify-center content-center'>
@@ -14,12 +14,12 @@ const OrderedProductCard: React.FC<Props> = ({ productDetail }) => {
           </div>
         </Link>
         <div className='flex flex-col'>
-          <div>{productDetail.Product.name}</div>
-          <div>${productDetail.price.toFixed(2)}</div>
+          {/* <div className=''>{productDetail.Product.name}</div> */}
+          {/* <div>${productDetail.price.toFixed(2)}</div> */}
         </div>
       </div>
       <div className='flex space-x-2'>
-        <div>{`Qty(${productDetail.quantity}):`}</div>
+        <div>{`$${productDetail.price.toFixed(2)} x Qty(${productDetail.quantity}):`}</div>
         <div>${(productDetail.quantity * productDetail.price).toFixed(2)}</div>
       </div>
     </div>

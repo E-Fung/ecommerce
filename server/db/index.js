@@ -11,8 +11,11 @@ require('dotenv').config();
 
 let sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_USERNAME, process.env.DATABASE_PASSWORD, {
   dialect: 'postgres',
-  host: 'localhost',
+  host: process.env.DATABASE_HOST,
   logging: false,
+  dialectOptions: {
+    socketPath: process.env.DATABASE_HOST,
+  },
 });
 
 //define all the models

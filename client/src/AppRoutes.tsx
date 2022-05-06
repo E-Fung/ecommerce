@@ -47,7 +47,12 @@ const AppRoutes: React.FC<Props> = ({ user, fetchUser, fetchCart, dropDetail }) 
   };
 
   const WithoutNav = () => {
-    return <Outlet />;
+    return (
+      <>
+        <Topbar />
+        <Outlet />
+      </>
+    );
   };
 
   return (
