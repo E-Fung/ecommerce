@@ -6,9 +6,10 @@
     "dev": "nodemon ./bin/www",
     "debug": "nodemon  --inspect ./bin/www",
     "seed": "node seed/product.js",
-    "start": "nodemon ./bin/www"
+    "start": "node ./bin/www"
   },
   "dependencies": {
+    "@google-cloud/debug-agent": "^5.2.8",
     "@sequelize/core": "^7.0.0-alpha.10",
     "axios": "^0.26.0",
     "bcrypt": "^5.0.1",

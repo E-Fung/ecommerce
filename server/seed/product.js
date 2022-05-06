@@ -27,7 +27,7 @@ const populateProducts = async () => {
 };
 
 const addProduct = async (data) => {
-  await axios.post('http://localhost:5000/product', data);
+  await axios.post('https://neat-shell-349400.uc.r.appspot.com/product', data);
 };
 
 async function runSeed() {

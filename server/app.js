@@ -6,6 +6,7 @@ var logger = require('morgan');
 const cors = require('cors');
 const User = require('./db').User;
 const jwt = require('jsonwebtoken');
+require('@google-cloud/debug-agent').start({serviceContext: {enableCanary: true}});
 
 var indexRouter = require('./routes');
 
