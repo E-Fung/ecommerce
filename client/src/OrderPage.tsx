@@ -29,10 +29,12 @@ const OrderPage: React.FC<Props> = ({ user }) => {
   }
 
   return (
-    <div className='justify-center flex flex-wrap p-4 text-black space-y-2'>
-      {orders?.map((order) => (
-        <OrderCard key={order.orderId} order={order} />
-      ))}
+    <div className="grow">
+      <div className='justify-center flex flex-wrap p-4 text-black space-y-2'>
+        {orders?.map((order) => (
+          <OrderCard key={order.orderId} order={order} />
+          ))}
+      </div>
     </div>
   );
 };

@@ -208,7 +208,7 @@ const Topbar: React.FC<Props> = ({ user, logout, cart, detail }) => {
   };
 
   return (
-    <nav className={`sticky w-full ${detail ? 'bg-secondaryDeep' : 'bg-background'} top-0 flex flex-col`}>
+    <nav className={`sticky w-full ${detail ? 'bg-secondaryDeep' : 'bg-background z-50'} top-0 flex flex-col`}>
       <div id='topBar' className='pt-6 mx-auto px-2 flex w-full h-auto justify-between content-center z-50'>
         {/* {hidden menu button on small screen} */}
         {location.pathname !== '/product' ? (
@@ -280,7 +280,7 @@ const Topbar: React.FC<Props> = ({ user, logout, cart, detail }) => {
                 </div>
               </button>
             </Link> */}
-          {location.pathname !== '/register' && location.pathname !== '/login' && (
+          {location.pathname !== '/register' && location.pathname !== '/login' && location.pathname !== '/profile' &&(
             <div>
               <div>
                 {user.email ? <UserLogo /> : <NoUserLogo />}
