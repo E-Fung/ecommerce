@@ -22,17 +22,19 @@ const OrderPage: React.FC<Props> = ({ user }) => {
 
   if (!orders.length) {
     return (
-      <div className='w-full h-full py-80 flex justify-center'>
+      <div className='grow flex justify-center text-black items-center'>
         <div className='text-5xl'>No Orders</div>
       </div>
     );
   }
 
   return (
-    <div className='justify-center flex flex-wrap p-4 text-black space-y-2'>
-      {orders?.map((order) => (
-        <OrderCard key={order.orderId} order={order} />
-      ))}
+    <div className="grow">
+      <div className='justify-center flex flex-wrap p-4 text-black space-y-2'>
+        {orders?.map((order) => (
+          <OrderCard key={order.orderId} order={order} />
+          ))}
+      </div>
     </div>
   );
 };

@@ -208,7 +208,7 @@ const Topbar: React.FC<Props> = ({ user, logout, cart, detail }) => {
   };
 
   return (
-    <nav className={`sticky w-full ${detail ? 'bg-secondaryDeep' : 'bg-background'} top-0 flex flex-col`}>
+    <nav className={`sticky w-full ${detail ? 'bg-secondaryDeep' : 'bg-background z-50'} top-0 flex flex-col`}>
       <div id='topBar' className='pt-6 mx-auto px-2 flex w-full h-auto justify-between content-center z-50'>
         {/* {hidden menu button on small screen} */}
         {location.pathname !== '/product' ? (
@@ -263,6 +263,11 @@ const Topbar: React.FC<Props> = ({ user, logout, cart, detail }) => {
             <div className='align-middle table-cell'>{searchParams.get('category')!.toUpperCase()}</div>
           </div>
         )}
+        {(location.pathname === '/cart' || location.pathname === '/orders') && (
+        <div className='text-black font-semibold sm:hidden table'>
+          <div className='align-middle table-cell'>{location.pathname!.substring(1).toUpperCase()}</div>
+        </div>
+        )}
         <div className='flex items-center sm:static sm:inset-auto sm:ml-6 sm:pr-0'>
           {/* Cart Register/Login button */}
           {/* <Link to={'/cart'}>
@@ -280,7 +285,7 @@ const Topbar: React.FC<Props> = ({ user, logout, cart, detail }) => {
                 </div>
               </button>
             </Link> */}
-          {location.pathname !== '/register' && location.pathname !== '/login' && (
+          {location.pathname !== '/register' && location.pathname !== '/login' && location.pathname !== '/profile' &&(
             <div>
               <div>
                 {user.email ? <UserLogo /> : <NoUserLogo />}
