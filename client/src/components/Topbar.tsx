@@ -263,6 +263,11 @@ const Topbar: React.FC<Props> = ({ user, logout, cart, detail }) => {
             <div className='align-middle table-cell'>{searchParams.get('category')!.toUpperCase()}</div>
           </div>
         )}
+        {(location.pathname === '/cart' || location.pathname === '/orders') && (
+        <div className='text-black font-semibold sm:hidden table'>
+          <div className='align-middle table-cell'>{location.pathname!.substring(1).toUpperCase()}</div>
+        </div>
+        )}
         <div className='flex items-center sm:static sm:inset-auto sm:ml-6 sm:pr-0'>
           {/* Cart Register/Login button */}
           {/* <Link to={'/cart'}>

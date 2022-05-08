@@ -22,7 +22,7 @@ const OrderPage: React.FC<Props> = ({ user }) => {
 
   if (!orders.length) {
     return (
-      <div className='w-full h-full py-80 flex justify-center'>
+      <div className='grow flex justify-center text-black items-center'>
         <div className='text-5xl'>No Orders</div>
       </div>
     );
